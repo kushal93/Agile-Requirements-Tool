@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="bootstrap/css/bootstrap.min.css" />
+	<h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
+	<h:outputStylesheet name="bootstrap/css/Custom.css" />
+	<h:outputStylesheet name="bootstrap/css/styles.css" />
+</h:head>
+<h:body>
+	<!-- Header -->
+	<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Dashboard</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+
+					<li class="dropdown"><a class="dropdown-toggle" role="button"
+						data-toggle="dropdown" href="#"><i
+							class="glyphicon glyphicon-user"></i> Profile <span class="caret"></span></a>
+						<ul id="g-account-menu" class="dropdown-menu" role="menu">
+							<li><a href="#">My Profile</a></li>
+						</ul></li>
+					<li><a href="NewDashboard.xhtml"><i
+							class="glyphicon glyphicon-lock"></i> Home</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /Header -->
+
+	<!-- Main -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3">
+				<!-- Left column -->
+				<ul class="list-unstyled">
+					<li class="nav-header"><a href="#" data-toggle="collapse"
+						data-target="#userMenu">
+							<h5>
+								Project <i class="glyphicon glyphicon-chevron-down"></i>
+							</h5>
+					</a>
+						<ul class="list-unstyled collapse in" id="userMenu">
+							<li><a href="home.xhtml"><i
+									class="glyphicon glyphicon-folder-close"></i> Objects</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>
+									Scenarios</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-ok"></i>
+									Business Rules</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-edit"></i>
+									Examples</a></li>
+							<li><a href="#"><i
+									class="glyphicon glyphicon-exclamation-sign"></i> Notifications</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-cog"></i>
+									Options</a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!-- /col-3 -->
+
+			<div class="col-sm-9">
+				<h:form id="attributeForm">
+					<p:growl id="msgs" />
+					<p:panel id="adder" header="Add a new attribute" style="margin-bottom:20px">
+						<h:panelGrid columns="2" cellpadding="5" id="addAttributePanel">
+							<p:outputLabel value="Attribute Name" />
+							<p:inputText value="#{objectOperations.attribute.attributeName}" required="true"/>
+							
+							<p:outputLabel value="Data Type" />
+							<p:inputText value="#{objectOperations.attribute.attributeType}" required="true"/>
+							
+							<p:outputLabel for="isMandatory" value="Mandatory?" />
+					        <p:selectOneRadio id="isMandatory" value="#{objectOperations.attribute.mandatoryType}" required="true">
+					            <f:selectItem itemLabel="Mandatory" itemValue="Mandatory" />
+					            <f:selectItem itemLabel="Conditional Mandatory" itemValue="Conditional Mandatory" />
+					            <f:selectItem itemLabel="NA" itemValue="NA" />
+					            <f:ajax event="change" execute="@this" render="conditionalMandatory" />
+					        </p:selectOneRadio>
+							
+							<p:outputLabel for="conditionalMandatory" value="Select Conditional Attributes" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}"/>
+							<p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatroy}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
+								<f:selectItems value="#{objectOperations.selectedBO.attributes}" var="attribute" itemLabel="#{attribute.attributeName}" itemValue="#{attribute.attributeName}"></f:selectItems>
+							</p:selectManyMenu>
+							<p:outputLabel value="Data Format" />
+							<p:inputText value="#{objectOperations.attribute.businessRule}" required="true"/>
+							
+							<p:commandButton id="btn_reset" value="Reset" type="reset"/>
+							<p:commandButton id="btn_add" value="Add Attribute"
+								update="attributesList msgs adder @parent" action="#{objectOperations.reinit}">
+								<p:collector value="#{objectOperations.attribute}"
+									addTo="#{objectOperations.selectedBO.attributes}" unique="true" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+					<p:outputPanel id="attributesList">
+						<p:dataTable value="#{objectOperations.selectedBO.attributes}" var="attribute"
+							id="attributesTable">
+
+							<p:column headerText="Attribute Name">
+								<h:outputText value="#{attribute.attributeName}" />
+							</p:column>
+
+							<p:column headerText="Attribute Type">
+								<f:facet name="header">
+									<h:outputText value="Attribute Type" />
+								</f:facet>
+								<h:outputText value="#{attribute.attributeType}" />
+							</p:column>
+							
+							<p:column headerText="Mandatory">
+								<f:facet name="header">
+									<h:outputText value="Mandatory" />
+								</f:facet>
+								<h:outputText value="#{attribute.mandatoryType}" />
+							</p:column>
+							
+							<p:column headerText="Data Format">
+								<f:facet name="header">
+									<h:outputText value="Data Format" />
+								</f:facet>
+								<h:outputText value="#{attribute.businessRule}" />
+							</p:column>
+
+							<p:column headerText="Action">
+								<p:commandButton value="Remove" update=":attributeForm:attributesList"
+									process=":attributeForm:attributesList">
+									<p:collector value="#{attribute}"
+										removeFrom="#{objectOperations.selectedBO.attributes}" unique="true" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</p:outputPanel>
+				</h:form>
+			</div>
+			<!--/col-span-9-->
+		</div>
+	</div>
+	<!-- /Main -->
+</h:body>
+</html>

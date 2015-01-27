@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="bootstrap/css/bootstrap.min.css" />
+	<h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
+	<h:outputStylesheet name="bootstrap/css/Custom.css" />
+	<h:outputStylesheet name="bootstrap/css/styles.css" />
+</h:head>
+<h:body>
+	<!-- Header -->
+	<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Dashboard</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+
+					<li class="dropdown"><a class="dropdown-toggle" role="button"
+						data-toggle="dropdown" href="#"><i
+							class="glyphicon glyphicon-user"></i> Profile <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#">My Profile</a></li>
+						</ul></li>
+					<li><a href="NewDashboard.xhtml"><i
+							class="glyphicon glyphicon-lock"></i> Home</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /Header -->
+	<!-- Main -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3">
+				<!-- Left column -->
+				<ul class="list-unstyled">
+					<li class="nav-header"><a href="#" data-toggle="collapse"
+						data-target="#userMenu">
+							<h5>
+								Project <i class="glyphicon glyphicon-chevron-down"></i>
+							</h5>
+					</a>
+						<ul class="list-unstyled collapse in">
+							<li><a href="home.xhtml"><i
+									class="glyphicon glyphicon-folder-close"></i>Business Objects</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>
+									Scenarios</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-ok"></i>
+									Business Rules</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-edit"></i>
+									Examples</a></li>
+							<li><a href="#"><i
+									class="glyphicon glyphicon-exclamation-sign"></i> Notifications</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-cog"></i>
+									Options</a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!-- /col-3 -->
+
+			<div class="col-sm-9">
+
+				<h:form id="objectForm">
+					<p:growl id="messages" showDetail="true" />
+					<p:panelGrid columns="2">
+						<p:outputLabel for="objectName" value="Business Object Name"></p:outputLabel>
+						<p:inputText id="objectName" value="#{objectOperations.objectName}" />
+						
+						<p:outputLabel for="objectType" value="Business Object Type"></p:outputLabel>
+						<p:selectOneMenu id="objectType" value="#{objectOperations.objectType}">
+							 <f:selectItem itemLabel="Core Business Object (Default)" itemValue="Core Business Object"/>
+							 <f:selectItem itemLabel="Transaction Business Object" itemValue="Transaction Business Object"/>
+			            </p:selectOneMenu>
+						<f:facet name="footer">
+							<h:commandButton value="Add Business Object"
+								action="#{objectOperations.addObject}" />
+						</f:facet>
+					</p:panelGrid>
+					<p:spacer height="30px;" />
+					<p:dataTable id="table" value="#{objectOperations.businessObjects}"
+						var="object" widgetVar="50" editable="true" rowIndexVar="currBO">
+						<f:facet name="header">  
+			                        Business Objects  
+			                    </f:facet>
+						<p:ajax event="rowEdit" listener="#{objectOperations.onEdit}"
+							update=":objectForm:messages" />
+						<p:ajax event="rowEditCancel"
+							listener="#{objectOperations.onDelete}"
+							update=":objectForm:messages" />
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Business Object Name" />
+							</f:facet>
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.objectName}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{object.objectName}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Business Object Type" />
+							</f:facet>
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.objectType}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:selectOneMenu value="#{object.objectType}">
+										 <f:selectItem itemLabel="Core Business Object" itemValue="Core Business Object"/>
+										 <f:selectItem itemLabel="Transaction Business Object" itemValue="Transaction Business Object"/>
+						            </p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Options">
+							<p:rowEditor />
+						</p:column>
+						<p:column headerText="Attributes">
+							<p:commandButton id="editAttrib_cb" value="Edit Attributes"
+								ajax="false" process="@this" type="submit"
+								action="#{objectOperations.editAttributes(object)}"></p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</div>
+			<!--/col-span-9-->
+		</div>
+	</div>
+	<!-- /Main -->
+</h:body>
+</html>

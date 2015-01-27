@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="bootstrap/css/bootstrap.min.css" />
+	<h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
+	<h:outputStylesheet name="bootstrap/css/Custom.css" />
+	<h:outputStylesheet name="bootstrap/css/styles.css" />
+	<script type="text/javascript">
+    function handleDrop(event, ui) {
+        var droppedCar = ui.draggable;
+        droppedCar.fadeOut('fast');
+    }
+	</script>
+</h:head>
+<h:body>
+	<!-- Header -->
+	<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Dashboard</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+
+					<li class="dropdown"><a class="dropdown-toggle" role="button"
+						data-toggle="dropdown" href="#"><i
+							class="glyphicon glyphicon-user"></i> Profile <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#">My Profile</a></li>
+						</ul></li>
+					<li><a href="NewDashboard.xhtml"><i
+							class="glyphicon glyphicon-lock"></i> Home</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /Header -->
+	<!-- Main -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3">
+				<!-- Left column -->
+				<ul class="list-unstyled">
+					<li class="nav-header"><a href="#" data-toggle="collapse"
+						data-target="#userMenu">
+							<h5>
+								Project <i class="glyphicon glyphicon-chevron-down"></i>
+							</h5>
+					</a>
+						<ul class="list-unstyled collapse in">
+							<li><a href="home.xhtml"><i
+									class="glyphicon glyphicon-folder-close"></i>Business Objects</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>
+									Scenarios</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-ok"></i>
+									Business Rules</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-edit"></i>
+									Examples</a></li>
+							<li><a href="#"><i
+									class="glyphicon glyphicon-exclamation-sign"></i> Notifications</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-cog"></i>
+									Options</a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!-- /col-3 -->
+
+			<div class="col-sm-9">
+			<h:form>
+					<p:fieldset legend="Available Objects" style="margin-top:40px">
+				        <p:dataTable id="availableObjects" var="object" value="#{dragTest.names}" >
+				            <p:column style="width:27px">
+				                <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
+				                <p:draggable for="dragIcon" revert="true" helper="clone"/>
+				            </p:column>
+				            
+				            <p:column headerText="Name">
+				                <h:outputText value="#{object.attributeName}" />
+				            </p:column>
+				        </p:dataTable>
+				    </p:fieldset>
+				<div class="col-sm-4">
+					<p:fieldset style="margin-top:20px" id="inputs" legend="Input Objects">
+				        <p:outputPanel id="dropAreaForInputs">
+				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.inputs}" style="font-size:15px;" />
+				            <p:dataTable id="inputsTable" var="inputObject" value="#{dragTest.inputs}" rendered="#{not empty dragTest.inputs}">
+				                <p:column headerText="Name">
+				                    <h:outputText value="#{inputObject.attributeName}" />
+				                </p:column>
+				            </p:dataTable>
+				        </p:outputPanel>
+				    </p:fieldset>
+				 	<p:droppable for="inputs" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
+				        <p:ajax listener="#{dragTest.onDrop}" update="dropAreaForInputs availableObjects" />
+				    </p:droppable>
+				</div>
+				<div class="col-sm-4">
+					<p:fieldset style="margin-top:20px" id="transaction" legend="Transaction Objects">
+				        <p:outputPanel id="dropAreaForTrans">
+				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.trans}" style="font-size:15px;" />
+				            <p:dataTable id="transTable" var="transObject" value="#{dragTest.trans}" rendered="#{not empty dragTest.trans}">
+				                <p:column headerText="Name">
+				                    <h:outputText value="#{transObject.attributeName}" />
+				                </p:column>
+				            </p:dataTable>
+				        </p:outputPanel>
+				    </p:fieldset>
+				 	<p:droppable for="transaction" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
+				        <p:ajax listener="#{dragTest.onDrop2}" update="dropAreaForTrans availableObjects" />
+				    </p:droppable>
+				</div>
+			</h:form>
+			</div>
+			<!--/col-span-9-->
+		</div>
+	</div>
+	<!-- /Main -->
+</h:body>
+</html>

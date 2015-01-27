@@ -1,0 +1,17 @@
+table.table.table-hover th, table.table.table-hover tr {
+	text-align: center;
+}
+
+.addObjectButton {
+	width:142px !important; 
+	float:left !important;
+}
+
+.Object-selection {
+	width: 20px;
+}
+.noborder{
+	border:none;
+	border-collapse: collapse;
+	border-color: white;
+}
