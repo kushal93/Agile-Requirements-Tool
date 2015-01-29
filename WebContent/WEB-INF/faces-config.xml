@@ -19,6 +19,11 @@
 		<managed-bean-class>test.DragTest</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>scenarioOperations</managed-bean-name>
+		<managed-bean-class>art.dashboard.ScenarioOperations</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 	<navigation-rule>
 		<display-name>home</display-name>
 		<from-view-id>/home.xhtml</from-view-id>

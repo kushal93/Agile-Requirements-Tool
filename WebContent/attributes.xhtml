@@ -80,26 +80,37 @@
 							<p:inputText value="#{objectOperations.attribute.attributeName}" required="true"/>
 							
 							<p:outputLabel value="Data Type" />
-							<p:inputText value="#{objectOperations.attribute.attributeType}" required="true"/>
+							<p:inputText label="#{objectOperations.attribute.attributeType}" value="#{objectOperations.attribute.attributeType}" required="true"/>
 							
 							<p:outputLabel for="isMandatory" value="Mandatory?" />
 					        <p:selectOneRadio id="isMandatory" value="#{objectOperations.attribute.mandatoryType}" required="true">
 					            <f:selectItem itemLabel="Mandatory" itemValue="Mandatory" />
 					            <f:selectItem itemLabel="Conditional Mandatory" itemValue="Conditional Mandatory" />
 					            <f:selectItem itemLabel="NA" itemValue="NA" />
-					            <f:ajax event="change" execute="@this" render="conditionalMandatory" />
+					            <f:ajax event="change" execute="@this" render="cm cm1" />
 					        </p:selectOneRadio>
+						
+							<h:panelGroup id="cm">
+								<p:outputLabel value="Select Conditional Attributes" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}"/>
+								<!-- <p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatroy}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
+									<f:selectItems value="#{objectOperations.selectedBO.attributes}" var="attribute" itemLabel="#{attribute.attributeName}" itemValue="#{attribute.attributeName}"></f:selectItems>
+								</p:selectManyMenu> -->
+							</h:panelGroup>
 							
-							<p:outputLabel for="conditionalMandatory" value="Select Conditional Attributes" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}"/>
-							<p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatroy}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
-								<f:selectItems value="#{objectOperations.selectedBO.attributes}" var="attribute" itemLabel="#{attribute.attributeName}" itemValue="#{attribute.attributeName}"></f:selectItems>
-							</p:selectManyMenu>
+							<h:panelGroup id="cm1">
+								<p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatroy}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
+									<f:selectItems value="#{objectOperations.selectedBO.attributes}" var="attribute" itemLabel="#{attribute.attributeName}" itemValue="#{attribute.attributeName}"></f:selectItems>
+								</p:selectManyMenu>
+							</h:panelGroup>
+							
+							
 							<p:outputLabel value="Data Format" />
 							<p:inputText value="#{objectOperations.attribute.businessRule}" required="true"/>
 							
 							<p:commandButton id="btn_reset" value="Reset" type="reset"/>
-							<p:commandButton id="btn_add" value="Add Attribute"
-								update="attributesList msgs adder @parent" action="#{objectOperations.reinit}">
+							 
+							 <p:commandButton id="btn_add" value="Add Attribute"
+								update="attributesList msgs adder @parent" action="#{objectOperations.addAttribute}">
 								<p:collector value="#{objectOperations.attribute}"
 									addTo="#{objectOperations.selectedBO.attributes}" unique="true" />
 							</p:commandButton>

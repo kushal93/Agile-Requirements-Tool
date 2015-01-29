@@ -85,4 +85,10 @@ public class BOAttribute implements Serializable {
 	public void setConditionalMandatroy(ArrayList<String> conditionalMandatroy) {
 		this.conditionalMandatroy = conditionalMandatroy;
 	}
+	
+//	public boolean CheckMandatoryType() {
+//		if(mandatoryType.equals("Conditional Mandatory"))
+//			return 
+//		
+//	}
 }

@@ -79,7 +79,7 @@
 			<div class="col-sm-9">
 			<h:form>
 					<p:fieldset legend="Available Objects" style="margin-top:40px">
-				        <p:dataTable id="availableObjects" var="object" value="#{dragTest.names}" >
+				        <p:dataTable id="availableObjects" var="object" value="#{ScenarioOperations.businessObjects}" >
 				            <p:column style="width:27px">
 				                <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
 				                <p:draggable for="dragIcon" revert="true" helper="clone"/>
@@ -91,10 +91,10 @@
 				        </p:dataTable>
 				    </p:fieldset>
 				<div class="col-sm-4">
-					<p:fieldset style="margin-top:20px" id="inputs" legend="Input Objects">
-				        <p:outputPanel id="dropAreaForInputs">
+					<p:fieldset style="margin-top:20px" id="inputs" legend="Pre-Requisites">
+				        <p:outputPanel id="dropAreaForPreReq">
 				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.inputs}" style="font-size:15px;" />
-				            <p:dataTable id="inputsTable" var="inputObject" value="#{dragTest.inputs}" rendered="#{not empty dragTest.inputs}">
+				            <p:dataTable id="preReqTable" var="preReqObject" value="#{dragTest.inputs}" rendered="#{not empty dragTest.inputs}">
 				                <p:column headerText="Name">
 				                    <h:outputText value="#{inputObject.attributeName}" />
 				                </p:column>
@@ -106,8 +106,18 @@
 				    </p:droppable>
 				</div>
 				<div class="col-sm-4">
-					<p:fieldset style="margin-top:20px" id="transaction" legend="Transaction Objects">
-				        <p:outputPanel id="dropAreaForTrans">
+					<p:fieldset style="margin-top:20px" id="transaction" legend="Input">
+				        <p:outputPanel id="dropAreaForInput">
+				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.trans}" style="font-size:15px;" />
+				            <p:dataTable id="transTable" var="transObject" value="#{dragTest.trans}" rendered="#{not empty dragTest.trans}">
+				                <p:column headerText="Name">
+				                    <h:outputText value="#{transObject.attributeName}" />
+				                </p:column>
+				            </p:dataTable>
+				        </p:outputPanel>
+				    </p:fieldset>
+				    <p:fieldset style="margin-top:20px" id="transaction" legend="Outputs">
+				        <p:outputPanel id="dropAreaForOutput">
 				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.trans}" style="font-size:15px;" />
 				            <p:dataTable id="transTable" var="transObject" value="#{dragTest.trans}" rendered="#{not empty dragTest.trans}">
 				                <p:column headerText="Name">

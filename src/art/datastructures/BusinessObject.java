@@ -3,13 +3,13 @@ package art.datastructures;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessObject {
+public class BusinessObject{
 	private String objectName;
 	private String objectType;
 	private int objectID;
 	public List<BOAttribute> attributes;
 
-	public BusinessObject(){
+	public BusinessObject() {
 		setAttributes(new ArrayList<BOAttribute>());
 	}
 	

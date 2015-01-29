@@ -65,9 +65,9 @@ public class ObjectOperations implements Serializable {
 		dropDownObjectTypes.put("Core Business Object (Default)",
 				"Core Business Object");
 
-		List<BOAttribute> temp = new ArrayList<BOAttribute>();
-		temp.add(new BOAttribute(1, "Name", "String", "NA", "length<20"));
-		temp.add(new BOAttribute(1, "ID", "Integer", "NA", "length<20"));
+//		List<BOAttribute> temp = new ArrayList<BOAttribute>();
+//		temp.add(new BOAttribute(1, "Name", "String", "NA", "length<20"));
+//		temp.add(new BOAttribute(1, "ID", "Integer", "NA", "length<20"));
 
 		// read the business objects from DB
 		businessObjects = new DatabaseOperations().readBusinessObjects();
@@ -187,15 +187,17 @@ public class ObjectOperations implements Serializable {
 	}
 
 	public void onDelete(RowEditEvent event) {
+		BusinessObject businessObject = (BusinessObject) event.getObject();
+		//System.out.println(businessObject.getObjectName());
 		businessObjects.remove((BusinessObject) event.getObject());
 		FacesMessage msg = new FacesMessage("Object Deleted");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
-
+        
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					String query = "delete from business_objects where objectName = '"
-							+ objectName + "')";
+							+ businessObject.getObjectName() + "'";
 					new DatabaseOperations().updateDB(query);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -236,14 +238,21 @@ public class ObjectOperations implements Serializable {
 				// businessObjects
 				// iterate through the businessObjects.Find the BO with
 				// selectedBO name & populate the same
-				for (int businessObjectsIterator = 0; businessObjectsIterator < businessObjects
+				
+				
+/*				for (int businessObjectsIterator = 0; businessObjectsIterator < businessObjects
 						.size(); businessObjectsIterator++) {
 					if (businessObjects.get(businessObjectsIterator)
 							.getObjectName().equals(selectedBO.getObjectName())) {
 						businessObjects.get(businessObjectsIterator)
 								.setAttributes(selectedBO.attributes);
 					}
-				}
+				}*/
+				
+				/*for(BusinessObject iterator : businessObjects){
+					if(iterator.getObjectName().equals(selectedBO.getObjectName()))
+						iterator.attributes = selectedBO.attributes;
+				}*/
 			}
 
 		}
@@ -270,38 +279,40 @@ public class ObjectOperations implements Serializable {
 	 * checks: 1.Checks if method is invoked with empty values 2.Checks if a
 	 * attribute with same name already exists
 	 * 
-	 * Notes: 1.Need to add db code
+	 * 
 	 ****************************************************************************/
 	public void addAttribute() {
+		boolean exists = false;
 		if (attribute.getAttributeName().equals("")
 				|| attribute.getAttributeType().equals("")
 				|| attribute.getBusinessRule().equals("")) {
 			FacesMessage msg = new FacesMessage(
 					"Please enter all the input values correctly");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			boolean exists = false;
-			for (BOAttribute attribute : selectedBO.attributes) {
-				if (attribute.getAttributeName().equalsIgnoreCase(
-						attribute.getAttributeName()))
-					exists = true;
+		} else { 
+			
+			for (BOAttribute temp : selectedBO.attributes) {
+				System.out.println("Test---------------" + temp.getAttributeName() + "-----" + attribute.getAttributeName() + "-----" + exists);
+				if (attribute.getAttributeName().equalsIgnoreCase(temp.getAttributeName()))
+				{	exists = true; }
+				    //return;
 			}
-			if (exists) {
+			/*if (exists) {
 				FacesMessage msg = new FacesMessage("Attribute name "
 						+ attribute.getAttributeName()
 						+ " already exists.Please choose a different name");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				// List<BOAttribute> attributes = selectedBO.getAttributes();
-				selectedBO.addAttribute(attribute.getAttributeName(),
+				
+			} *//* else {
+				/// List<BOAttribute> attributes = selectedBO.getAttributes();
+				/*selectedBO.addAttribute(attribute.getAttributeName(),
 						attribute.getAttributeType(),
 						attribute.getMandatoryType(),
 						attribute.getBusinessRule());
-				// selectedBO.setAttributes(attributes);
-
-				// push values to DB also
-				new Thread(new Runnable() {
-					public void run() {
+				System.out.println("Debug Attribute");*/
+				
+		//new Thread(new Runnable() {
+			//		public void run() {
 						try {
 							String query = "insert into attributes values ("
 									+ "'" + selectedBO.getObjectName() + "'"
@@ -312,7 +323,16 @@ public class ObjectOperations implements Serializable {
 									+ "'" + "," + "'"
 									+ attribute.getBusinessRule() + "'" + " )";
 							System.out.println(query);
-							new DatabaseOperations().updateDB(query);
+							DatabaseOperations dbop = new DatabaseOperations();
+							int flag=0;
+							flag=dbop.updateDB(query);
+							if(flag==-1)
+							{
+								FacesMessage msg = new FacesMessage("Attribute name "
+										+ attribute.getAttributeName()
+										+ " already exists.Please choose a different name");
+								FacesContext.getCurrentInstance().addMessage(null, msg);
+							}
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							System.out.println("Error in Class"
@@ -321,14 +341,18 @@ public class ObjectOperations implements Serializable {
 						}
 
 					}
-				}).start();
-
+					//}).start();
+				
 				// reset all values
 				attribute = new BOAttribute();
-			}
-		}
-	}
-
+		      }
+				
+			//}
+		//}
+	//}
+	
+	
+	
 	/***************************************************************************
 	 * Method: onEdit
 	 * 
@@ -354,6 +378,7 @@ public class ObjectOperations implements Serializable {
 	public String reinit() {
 		setAttribute(new BOAttribute());
 		return null;
+		
 	}
 
 	public List<BusinessObject> getBusinessObjects() {

@@ -62,7 +62,8 @@ public class DatabaseOperations {
 
 	}
 
-	public void updateDB(String query) {
+	public int updateDB(String query) {
+		int flag=0;
 		try {
 			System.out.println("Query: " + query);
 			// statements allow to issue SQL queries to the database
@@ -71,6 +72,7 @@ public class DatabaseOperations {
 		} catch (Exception e) {
 			System.out.println("Error in DatabaseOperations -> updateDB() :"
 					+ e.getMessage());
+			flag=-1;
 		} finally {
 			try {
 				// close all connections
@@ -81,9 +83,10 @@ public class DatabaseOperations {
 				System.out
 						.println("Error in DatabaseOperations -> updateDB() :"
 								+ e.getMessage());
+				flag=-1;
 			}
 		}
-
+		return flag;
 	}
 
 	public ArrayList<BusinessObject> readBusinessObjects() {
