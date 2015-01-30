@@ -43,6 +43,7 @@ public class ScenarioOperations implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
+	private ArrayList<BusinessObject> businessObjectsCopy = new ArrayList<BusinessObject>();
 	private ArrayList <BusinessObject> preReqObjects = new ArrayList <BusinessObject>() ;
 	private ArrayList<BusinessObject> inputObject = new ArrayList <BusinessObject>();
 	private ArrayList<BusinessObject> outputObject = new ArrayList <BusinessObject>();
@@ -54,6 +55,7 @@ public class ScenarioOperations implements Serializable {
 		
 		// read the business objects from DB
 		businessObjects = new DatabaseOperations().readBusinessObjects();
+		businessObjectsCopy.addAll(businessObjects);
 		/*businessObjects.add(new BusinessObject(50,"Core Business Object","test1",null));
 				businessObjects.add(new BusinessObject(50,"Core Business Object","test2",null));*/
 	}
@@ -117,11 +119,19 @@ public class ScenarioOperations implements Serializable {
   
         outputObject.add(object);  
         businessObjects.remove(object);
-  
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(object.getObjectName() + " added", "Position:" + event.getDropId()));  
+        FacesMessage msg = new FacesMessage(object.getObjectName() + " added");
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
     }
 	
 	public void setSelectedObject(BusinessObject object) {
         this.selectedPreReqObject = object;
     }
+	
+	public void reset() {
+		businessObjects.clear();
+		businessObjects.addAll(businessObjectsCopy);
+		outputObject.clear();
+		inputObject.clear();
+		preReqObjects.clear();
+	}
 }

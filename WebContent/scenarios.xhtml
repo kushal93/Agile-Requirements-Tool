@@ -80,9 +80,10 @@
 			<!-- /col-3 -->
             
 			<div class="col-md-8">
-			<h:form>
+			<h:form id="scenarioForm" >
 					<p:fieldset legend="Available Business Objects" style="margin-top:40px">
-				        <p:dataTable id="availableObjects" var="object" value="#{scenarioOperations.businessObjects}" scrollable="true">
+				        <p:dataTable id="availableObjects" var="object" value="#{scenarioOperations.businessObjects}" 
+				        scrollable="true">
 				            <p:column style="width:27px">
 				                <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
 				                <p:draggable for="dragIcon" revert="true" helper="clone"/>
@@ -91,6 +92,12 @@
 				                <h:outputText value="#{object.objectName}" />
 				            </p:column>
 				        </p:dataTable>
+				        <div align="center">
+				        <p:commandButton id="btn_reset" value="Reset"
+				         action="#{scenarioOperations.reset}"
+				         update="scenarioForm"
+				        />
+				        </div>
 				    </p:fieldset>
 				<!-- <div class="col-sm-9"> -->
 					<table width="100%">
@@ -100,7 +107,7 @@
             		<p:fieldset style="margin-top:20px" id="prereq" legend="Pre-Requisites">
 				        <p:outputPanel id="dropAreaForPreReq">
 				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.preReqObjects}" style="font-size:15px;" />
-				            <p:dataTable id="preReqTable" var="preReqObject" value="#{scenarioOperations.preReqObjects}" rendered="#{not empty scenarioOperations.preReqObjects}">
+				            <p:dataTable id="preReqTable" var="preReqObject" value="#{scenarioOperations.preReqObjects}" rendered="#{not empty scenarioOperations.preReqObjects}" scrollable="true">
 				                <p:column headerText="Name">
 				                    <h:outputText value="#{preReqObject.objectName}" />
 				                </p:column>
@@ -117,7 +124,7 @@
 					<p:fieldset style="margin-top:20px" id="input" legend="Input Object">
 				        <p:outputPanel id="dropAreaForInput">
 				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.inputObjects}" style="font-size:15px;" />
-				            <p:dataTable id="inputTable" var="inputObject" value="#{scenarioOperations.inputObjects}" rendered="#{not empty scenarioOperations.inputObjects}">
+				            <p:dataTable id="inputTable" var="inputObject" value="#{scenarioOperations.inputObjects}" rendered="#{not empty scenarioOperations.inputObjects}" scrollable="true">
 				                <p:column headerText="Name">
 				                    <h:outputText value="#{inputObject.objectName}" />
 				                </p:column>
@@ -134,7 +141,7 @@
             		<p:fieldset style="margin-top:20px" id="output" legend="Outputs">
 				        <p:outputPanel id="dropAreaForOutput">
 				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.outputObjects}" style="font-size:15px;" />
-				            <p:dataTable id="outPutTable" var="outputObject" value="#{scenarioOperations.outputObjects}" rendered="#{not empty scenarioOperations.outputObjects}">
+				            <p:dataTable id="outPutTable" var="outputObject" value="#{scenarioOperations.outputObjects}" rendered="#{not empty scenarioOperations.outputObjects}" scrollable="true">
 				                <p:column headerText="Name">
 				                    <h:outputText value="#{outputObject.objectName}" />
 				                </p:column>
