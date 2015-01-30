@@ -154,7 +154,7 @@
 
 							<p:column headerText="Action">
 								<p:commandButton value="Remove" update=":attributeForm:attributesList"
-									process=":attributeForm:attributesList">
+									process=":attributeForm:attributesList" action="#{objectOperations.onDeleteAttribute}">
 									<p:collector value="#{attribute}"
 										removeFrom="#{objectOperations.selectedBO.attributes}" unique="true" />
 								</p:commandButton>
