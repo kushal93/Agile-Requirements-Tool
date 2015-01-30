@@ -10,11 +10,12 @@
 	<h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
 	<h:outputStylesheet name="bootstrap/css/Custom.css" />
 	<h:outputStylesheet name="bootstrap/css/styles.css" />
+	
 	<script type="text/javascript">
     function handleDrop(event, ui) {
-        var droppedCar = ui.draggable;
+        var droppedObject = ui.draggable;
  
-        droppedCar.fadeOut('fast');
+        droppedObject.fadeOut('slow');
     }
 </script>
 
@@ -81,14 +82,13 @@
 			<div class="col-md-8">
 			<h:form>
 					<p:fieldset legend="Available Business Objects" style="margin-top:40px">
-				        <p:dataTable id="availableObjects" var="object" value="#{scenarioOperations.businessObjects}" >
+				        <p:dataTable id="availableObjects" var="object" value="#{scenarioOperations.businessObjects}" scrollable="true">
 				            <p:column style="width:27px">
 				                <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
 				                <p:draggable for="dragIcon" revert="true" helper="clone"/>
 				            </p:column>
-				            
 				            <p:column headerText="Name">
-				                <h:outputText value="#{object.attributeName}" />
+				                <h:outputText value="#{object.objectName}" />
 				            </p:column>
 				        </p:dataTable>
 				    </p:fieldset>
@@ -97,51 +97,58 @@
             		<tr>
             		<td>
             		<div class="col-sm-12" >
-            		<p:fieldset style="margin-top:20px" id="inputs" legend="Pre-Requisites">
+            		<p:fieldset style="margin-top:20px" id="prereq" legend="Pre-Requisites">
 				        <p:outputPanel id="dropAreaForPreReq">
-				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.inputs}" style="font-size:15px;" />
-				            <p:dataTable id="preReqTable" var="preReqObject" value="#{dragTest.inputs}" rendered="#{not empty dragTest.inputs}">
+				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.preReqObjects}" style="font-size:15px;" />
+				            <p:dataTable id="preReqTable" var="preReqObject" value="#{scenarioOperations.preReqObjects}" rendered="#{not empty scenarioOperations.preReqObjects}">
 				                <p:column headerText="Name">
-				                    <h:outputText value="#{inputObject.attributeName}" />
+				                    <h:outputText value="#{preReqObject.objectName}" />
 				                </p:column>
 				            </p:dataTable>
 				        </p:outputPanel>
 				    </p:fieldset>
+				     <p:droppable for="prereq" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
+				        <p:ajax listener="#{scenarioOperations.onDragDropPreReq}" update="dropAreaForPreReq availableObjects" />
+				    </p:droppable>
             		</div>
             		</td>
             		<td>
             		<div class="col-sm-12">
-					<p:fieldset style="margin-top:20px" id="transaction" legend="Input Object">
+					<p:fieldset style="margin-top:20px" id="input" legend="Input Object">
 				        <p:outputPanel id="dropAreaForInput">
-				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.trans}" style="font-size:15px;" />
-				            <p:dataTable id="transTable" var="transObject" value="#{dragTest.trans}" rendered="#{not empty dragTest.trans}">
+				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.inputObjects}" style="font-size:15px;" />
+				            <p:dataTable id="inputTable" var="inputObject" value="#{scenarioOperations.inputObjects}" rendered="#{not empty scenarioOperations.inputObjects}">
 				                <p:column headerText="Name">
-				                    <h:outputText value="#{transObject.attributeName}" />
-				                </p:column>
-				            </p:dataTable>
-				        </p:outputPanel>
-				    </p:fieldset>	
-				    </div>	
-            		</td>
-            		<td>
-            		<div class="col-sm-12">
-            		<p:fieldset style="margin-top:20px" id="transaction" legend="Outputs">
-				        <p:outputPanel id="dropAreaForOutput">
-				            <h:outputText value="!!!Drop here!!!" rendered="#{empty dragTest.trans}" style="font-size:15px;" />
-				            <p:dataTable id="transTable" var="transObject" value="#{dragTest.trans}" rendered="#{not empty dragTest.trans}">
-				                <p:column headerText="Name">
-				                    <h:outputText value="#{transObject.attributeName}" />
+				                    <h:outputText value="#{inputObject.objectName}" />
 				                </p:column>
 				            </p:dataTable>
 				        </p:outputPanel>
 				    </p:fieldset>
+				    <p:droppable for="input" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
+				        <p:ajax listener="#{scenarioOperations.onDragDropInput}" update="dropAreaForInput availableObjects" />
+				    </p:droppable>	
+				    </div>	
+            		</td>
+            		<td>
+            		<div class="col-sm-12">
+            		<p:fieldset style="margin-top:20px" id="output" legend="Outputs">
+				        <p:outputPanel id="dropAreaForOutput">
+				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.outputObjects}" style="font-size:15px;" />
+				            <p:dataTable id="outPutTable" var="outputObject" value="#{scenarioOperations.outputObjects}" rendered="#{not empty scenarioOperations.outputObjects}">
+				                <p:column headerText="Name">
+				                    <h:outputText value="#{outputObject.objectName}" />
+				                </p:column>
+				            </p:dataTable>
+				        </p:outputPanel>
+				    </p:fieldset>
+				     <p:droppable for="output" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
+				        <p:ajax listener="#{scenarioOperations.onDragDropOutput}" update="dropAreaForOutput availableObjects" />
+				    </p:droppable>	
 				    </div>
             		</td>
             		</tr>
             		</table>
-				 	<p:droppable for="transaction" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
-				        <p:ajax listener="#{dragTest.onDrop2}" update="dropAreaForTrans availableObjects" />
-				    </p:droppable>
+				 	
 				<!-- </div> -->
 			</h:form>
 			</div>
