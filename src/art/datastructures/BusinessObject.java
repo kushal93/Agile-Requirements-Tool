@@ -20,8 +20,8 @@ public class BusinessObject{
 		this.attributes = attributes;
 	}
 	
-	public void addAttribute(String attributeName, String attributeType,String mandatoryType, String businessRule){
-		this.attributes.add(new BOAttribute(attributes.size()+1, attributeName, attributeType,mandatoryType, businessRule));
+	public void addAttribute(String attributeName, String attributeType,String mandatoryType, String conditionalDependencies, String businessRule){
+		this.attributes.add(new BOAttribute(attributes.size()+1, attributeName, attributeType,mandatoryType, conditionalDependencies, businessRule));
 	}
 	
 	public String getObjectName() {

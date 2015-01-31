@@ -10,7 +10,7 @@
 	<h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
 	<h:outputStylesheet name="bootstrap/css/Custom.css" />
 	<h:outputStylesheet name="bootstrap/css/styles.css" />
-	
+
 	<script type="text/javascript">
     function handleDrop(event, ui) {
         var droppedObject = ui.draggable;
@@ -64,8 +64,8 @@
 						<ul class="list-unstyled collapse in">
 							<li><a href="home.xhtml"><i
 									class="glyphicon glyphicon-folder-close"></i>Business Objects</a></li>
-							<li><a href="scenarios.xhtml"><i class="glyphicon glyphicon-eye-open"></i>
-									Scenarios</a></li>
+							<li><a href="scenarios.xhtml"><i
+									class="glyphicon glyphicon-eye-open"></i> Scenarios</a></li>
 							<li><a href="#"><i class="glyphicon glyphicon-ok"></i>
 									Business Rules</a></li>
 							<li><a href="#"><i class="glyphicon glyphicon-edit"></i>
@@ -78,86 +78,113 @@
 				</ul>
 			</div>
 			<!-- /col-3 -->
-            
+
 			<div class="col-md-8">
-			<h:form id="scenarioForm" >
-					<p:fieldset legend="Available Business Objects" style="margin-top:40px">
-				        <p:dataTable id="availableObjects" var="object" value="#{scenarioOperations.businessObjects}" 
-				        scrollable="true">
-				            <p:column style="width:27px">
-				                <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
-				                <p:draggable for="dragIcon" revert="true" helper="clone"/>
-				            </p:column>
-				            <p:column headerText="Name">
-				                <h:outputText value="#{object.objectName}" />
-				            </p:column>
-				        </p:dataTable>
-				        <div align="center">
-				        <p:commandButton id="btn_reset" value="Reset"
-				         action="#{scenarioOperations.reset}"
-				         update="scenarioForm"
-				        />
-				        </div>
-				    </p:fieldset>
-				<!-- <div class="col-sm-9"> -->
+				<h:form id="scenarioForm">
+					<p:fieldset legend="Available Business Objects"
+						style="margin-top:40px">
+						<p:dataTable id="availableObjects" var="object"
+							value="#{scenarioOperations.businessObjects}" scrollable="true">
+							<p:column style="width:27px">
+								<h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
+								<p:draggable for="dragIcon" revert="true" helper="clone" />
+							</p:column>
+							<p:column headerText="Name">
+								<h:outputText value="#{object.objectName}" />
+							</p:column>
+						</p:dataTable>
+						<div align="center">
+							<p:commandButton id="btn_reset" value="Reset"
+								action="#{scenarioOperations.reset}" update="scenarioForm" />
+						</div>
+					</p:fieldset>
+					<!-- <div class="col-sm-9"> -->
 					<table width="100%">
-            		<tr>
-            		<td>
-            		<div class="col-sm-12" >
-            		<p:fieldset style="margin-top:20px" id="prereq" legend="Pre-Requisites">
-				        <p:outputPanel id="dropAreaForPreReq">
-				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.preReqObjects}" style="font-size:15px;" />
-				            <p:dataTable id="preReqTable" var="preReqObject" value="#{scenarioOperations.preReqObjects}" rendered="#{not empty scenarioOperations.preReqObjects}" scrollable="true">
-				                <p:column headerText="Name">
-				                    <h:outputText value="#{preReqObject.objectName}" />
-				                </p:column>
-				            </p:dataTable>
-				        </p:outputPanel>
-				    </p:fieldset>
-				     <p:droppable for="prereq" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
-				        <p:ajax listener="#{scenarioOperations.onDragDropPreReq}" update="dropAreaForPreReq availableObjects" />
-				    </p:droppable>
-            		</div>
-            		</td>
-            		<td>
-            		<div class="col-sm-12">
-					<p:fieldset style="margin-top:20px" id="input" legend="Input Object">
-				        <p:outputPanel id="dropAreaForInput">
-				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.inputObjects}" style="font-size:15px;" />
-				            <p:dataTable id="inputTable" var="inputObject" value="#{scenarioOperations.inputObjects}" rendered="#{not empty scenarioOperations.inputObjects}" scrollable="true">
-				                <p:column headerText="Name">
-				                    <h:outputText value="#{inputObject.objectName}" />
-				                </p:column>
-				            </p:dataTable>
-				        </p:outputPanel>
-				    </p:fieldset>
-				    <p:droppable for="input" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
-				        <p:ajax listener="#{scenarioOperations.onDragDropInput}" update="dropAreaForInput availableObjects" />
-				    </p:droppable>	
-				    </div>	
-            		</td>
-            		<td>
-            		<div class="col-sm-12">
-            		<p:fieldset style="margin-top:20px" id="output" legend="Outputs">
-				        <p:outputPanel id="dropAreaForOutput">
-				            <h:outputText value="!!!Drop here!!!" rendered="#{empty scenarioOperations.outputObjects}" style="font-size:15px;" />
-				            <p:dataTable id="outPutTable" var="outputObject" value="#{scenarioOperations.outputObjects}" rendered="#{not empty scenarioOperations.outputObjects}" scrollable="true">
-				                <p:column headerText="Name">
-				                    <h:outputText value="#{outputObject.objectName}" />
-				                </p:column>
-				            </p:dataTable>
-				        </p:outputPanel>
-				    </p:fieldset>
-				     <p:droppable for="output" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableObjects" onDrop="handleDrop">
-				        <p:ajax listener="#{scenarioOperations.onDragDropOutput}" update="dropAreaForOutput availableObjects" />
-				    </p:droppable>	
-				    </div>
-            		</td>
-            		</tr>
-            		</table>
-				 	
-				<!-- </div> -->
-			</h:form>
+						<tr>
+							<td>
+								<div class="col-sm-12">
+									<p:fieldset style="margin-top:20px" id="prereq"
+										legend="Pre-Requisites">
+										<p:outputPanel id="dropAreaForPreReq">
+											<h:outputText value="!!!Drop here!!!"
+												rendered="#{empty scenarioOperations.preReqObjects}"
+												style="font-size:15px;" />
+											<p:dataTable id="preReqTable" var="preReqObject"
+												value="#{scenarioOperations.preReqObjects}"
+												rendered="#{not empty scenarioOperations.preReqObjects}"
+												scrollable="true">
+												<p:column headerText="Name">
+													<h:outputText value="#{preReqObject.objectName}" />
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:fieldset>
+									<p:droppable for="prereq" tolerance="touch"
+										activeStyleClass="ui-state-highlight"
+										datasource="availableObjects" onDrop="handleDrop">
+										<p:ajax listener="#{scenarioOperations.onDragDropPreReq}"
+											update="dropAreaForPreReq availableObjects" />
+									</p:droppable>
+								</div>
+							</td>
+							<td>
+								<div class="col-sm-12">
+									<p:fieldset style="margin-top:20px" id="input"
+										legend="Input Object">
+										<p:outputPanel id="dropAreaForInput">
+											<h:outputText value="!!!Drop here!!!"
+												rendered="#{empty scenarioOperations.inputObjects}"
+												style="font-size:15px;" />
+											<p:dataTable id="inputTable" var="inputObject"
+												value="#{scenarioOperations.inputObjects}"
+												rendered="#{not empty scenarioOperations.inputObjects}"
+												scrollable="true">
+												<p:column headerText="Name">
+													<h:outputText value="#{inputObject.objectName}" />
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:fieldset>
+									<p:droppable for="input" tolerance="touch"
+										activeStyleClass="ui-state-highlight"
+										datasource="availableObjects" onDrop="handleDrop">
+										<p:ajax listener="#{scenarioOperations.onDragDropInput}"
+											update="dropAreaForInput availableObjects" />
+									</p:droppable>
+								</div>
+							</td>
+							<td>
+								<div class="col-sm-12">
+									<p:fieldset style="margin-top:20px" id="output"
+										legend="Outputs">
+										<p:outputPanel id="dropAreaForOutput">
+											<h:outputText value="!!!Drop here!!!"
+												rendered="#{empty scenarioOperations.outputObjects}"
+												style="font-size:15px;" />
+											<p:dataTable id="outPutTable" var="outputObject"
+												value="#{scenarioOperations.outputObjects}"
+												rendered="#{not empty scenarioOperations.outputObjects}"
+												scrollable="true">
+												<p:column headerText="Name">
+													<h:outputText value="#{outputObject.objectName}" />
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:fieldset>
+									<p:droppable for="output" tolerance="touch"
+										activeStyleClass="ui-state-highlight"
+										datasource="availableObjects" onDrop="handleDrop">
+										<p:ajax listener="#{scenarioOperations.onDragDropOutput}"
+											update="dropAreaForOutput availableObjects" />
+									</p:droppable>
+								</div>
+							</td>
+						</tr>
+					</table>
+					
+
+					<!-- </div> -->
+				</h:form>
 			</div>
 			<!--/col-span-9-->
 		</div>

@@ -101,7 +101,7 @@
 							</h:panelGroup>
 							
 							<h:panelGroup id="conditionalMandatoryInput">
-								<p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatroy}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
+								<p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatory}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
 									<f:selectItems value="#{objectOperations.selectedBO.attributes}" var="attribute" itemLabel="#{attribute.attributeName}" itemValue="#{attribute.attributeName}"></f:selectItems>
 								</p:selectManyMenu>
 							</h:panelGroup>
@@ -116,9 +116,10 @@
 							<p:commandButton id="btn_reset" value="Reset" type="reset"/>
 							 
 							 <p:commandButton id="btn_add" value="Add Attribute"
-								update="attributesList msgs adder @parent" action="#{objectOperations.addAttribute}">
+								update = "attributeForm:attributesTable attributeForm:msgs" action="#{objectOperations.addAttribute}">
 								<p:collector value="#{objectOperations.attribute}"
-									addTo="#{objectOperations.selectedBO.attributes}" unique="true" />
+									addTo="#{objectOperations.selectedBO.attributes}" unique="true"
+									 />
 							</p:commandButton>
 						</h:panelGrid>
 					</p:panel>
@@ -143,6 +144,13 @@
 									<h:outputText value="Mandatory" />
 								</f:facet>
 								<h:outputText value="#{attribute.mandatoryType}" />
+							</p:column>
+							
+							<p:column headerText="Conditional Dependencies">
+								<f:facet name="header">
+									<h:outputText value="Conditional Dependencies" />
+								</f:facet>
+								<h:outputText value="#{attribute.conditionalDependencies}" />
 							</p:column>
 							
 							<p:column headerText="Data Format">

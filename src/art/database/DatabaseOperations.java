@@ -146,6 +146,7 @@ public class DatabaseOperations {
 						resultSet.getString("attributeName"), resultSet
 								.getString("dataType"), resultSet
 								.getString("mandatoryType"), resultSet
+								.getString("conditionalData"), resultSet
 								.getString("dataFormat")));
 			}
 

@@ -283,9 +283,10 @@ public class ObjectOperations implements Serializable {
 	 ****************************************************************************/
 	public void addAttribute() {
 		boolean exists = false;
+		
 		if (attribute.getAttributeName().equals("")
-				|| attribute.getAttributeType().equals("")
-				|| attribute.getBusinessRule().equals("")) {
+				|| attribute.getAttributeType().equals("")) {
+				// || attribute.getBusinessRule().equals("")) {
 			FacesMessage msg = new FacesMessage(
 					"Please enter all the input values correctly");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -297,6 +298,9 @@ public class ObjectOperations implements Serializable {
 				{	exists = true; }
 				    //return;
 			}
+			
+			
+			
 			/*if (exists) {
 				FacesMessage msg = new FacesMessage("Attribute name "
 						+ attribute.getAttributeName()
@@ -314,13 +318,15 @@ public class ObjectOperations implements Serializable {
 		//new Thread(new Runnable() {
 			//		public void run() {
 						try {
+							
 							String query = "insert into attributes values ("
 									+ "'" + selectedBO.getObjectName() + "'"
 									+ "," + "nextval('art_seq')" + "," + "'"
 									+ attribute.getAttributeName() + "'" + ","
 									+ "'" + attribute.getAttributeType() + "'"
-									+ "," + "'" + attribute.getMandatoryType()
-									+ "'" + "," + "'"
+									+ "," + "'" + attribute.getMandatoryType() + "'"
+									+ "," + "'" + String.join("-", attribute.getConditionalMandatory())
+								    + "'" + "," + "'"
 									+ attribute.getBusinessRule() + "'" + " )";
 							System.out.println(query);
 							DatabaseOperations dbop = new DatabaseOperations();
