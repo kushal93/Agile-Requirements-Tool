@@ -51,6 +51,8 @@ public class ObjectOperations implements Serializable {
 	 * on edit attributes in home page
 	 */
 	private BusinessObject selectedBO;
+	
+	private BusinessObject duplicateCopyofSelectedBO;
 
 	// For attribute operations
 	private BOAttribute attribute = new BOAttribute();
@@ -64,10 +66,6 @@ public class ObjectOperations implements Serializable {
 				"Transaction Business Object");
 		dropDownObjectTypes.put("Core Business Object (Default)",
 				"Core Business Object");
-
-//		List<BOAttribute> temp = new ArrayList<BOAttribute>();
-//		temp.add(new BOAttribute(1, "Name", "String", "NA", "length<20"));
-//		temp.add(new BOAttribute(1, "ID", "Integer", "NA", "length<20"));
 
 		// read the business objects from DB
 		businessObjects = new DatabaseOperations().readBusinessObjects();
@@ -238,24 +236,13 @@ public class ObjectOperations implements Serializable {
 				// businessObjects
 				// iterate through the businessObjects.Find the BO with
 				// selectedBO name & populate the same
-				
-				
-/*				for (int businessObjectsIterator = 0; businessObjectsIterator < businessObjects
-						.size(); businessObjectsIterator++) {
-					if (businessObjects.get(businessObjectsIterator)
-							.getObjectName().equals(selectedBO.getObjectName())) {
-						businessObjects.get(businessObjectsIterator)
-								.setAttributes(selectedBO.attributes);
-					}
-				}*/
-				
-				/*for(BusinessObject iterator : businessObjects){
-					if(iterator.getObjectName().equals(selectedBO.getObjectName()))
-						iterator.attributes = selectedBO.attributes;
-				}*/
 			}
 
 		}
+		//create a duplicate copy also - useful in deleteAttribute Operation
+				duplicateCopyofSelectedBO = new BusinessObject();
+				duplicateCopyofSelectedBO.attributes = new ArrayList<BOAttribute>();
+				duplicateCopyofSelectedBO.attributes.addAll(selectedBO.attributes);
 
 		return "editAttributes";
 	}
@@ -296,27 +283,7 @@ public class ObjectOperations implements Serializable {
 				System.out.println("Test---------------" + temp.getAttributeName() + "-----" + attribute.getAttributeName() + "-----" + exists);
 				if (attribute.getAttributeName().equalsIgnoreCase(temp.getAttributeName()))
 				{	exists = true; }
-				    //return;
 			}
-			
-			
-			
-			/*if (exists) {
-				FacesMessage msg = new FacesMessage("Attribute name "
-						+ attribute.getAttributeName()
-						+ " already exists.Please choose a different name");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-				
-			} *//* else {
-				/// List<BOAttribute> attributes = selectedBO.getAttributes();
-				/*selectedBO.addAttribute(attribute.getAttributeName(),
-						attribute.getAttributeType(),
-						attribute.getMandatoryType(),
-						attribute.getBusinessRule());
-				System.out.println("Debug Attribute");*/
-				
-		//new Thread(new Runnable() {
-			//		public void run() {
 						try {
 							
 							String query = "insert into attributes values ("
@@ -347,17 +314,11 @@ public class ObjectOperations implements Serializable {
 						}
 
 					}
-					//}).start();
 				
 				// reset all values
 				attribute = new BOAttribute();
 		      }
 				
-			//}
-		//}
-	//}
-	
-	
 	
 	/***************************************************************************
 	 * Method: onEdit
@@ -374,11 +335,44 @@ public class ObjectOperations implements Serializable {
 
 	}
 
-	public void onDeleteAttribute(RowEditEvent event) {
-		// attributes.remove((BOAttribute) event.getObject());
-		selectedBO.attributes.remove((BOAttribute) event.getObject());
-		FacesMessage msg = new FacesMessage("Attribute Deleted");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
+		/***************************************************************************
+		 * Method: onDeleteAttribute
+		 * 
+		 * Purpose: This method is invoked when user opts to delete an attribute
+		 ****************************************************************************/
+		public void onDeleteAttribute() {
+			//Find out the attribute that is deleted - for this puropse only duplicateBO is created & updated.
+			BOAttribute attributeToBeDeleted = new BOAttribute();
+			for(BOAttribute iterator : duplicateCopyofSelectedBO.attributes){
+				if(!selectedBO.attributes.contains(iterator)){
+					//implies that is the attribute to be deleted
+					attributeToBeDeleted = iterator;
+				}
+					
+			}
+			// First delete old BO from main list
+			businessObjects.remove(selectedBO);
+			// edit the selected BO
+			selectedBO.attributes.remove(attributeToBeDeleted);
+			// Add it again to the main BO's List
+			businessObjects.add(selectedBO);
+
+			FacesMessage msg = new FacesMessage("Attribute Deleted");
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
+			//Dont use threads for attributes page - has some problem
+			try {
+				String query = "delete from attributes where objectName = '"+selectedBO.getObjectName()+"' and attributeName = '"
+						+ attributeToBeDeleted.getAttributeName()+"'";
+				new DatabaseOperations().updateDB(query);
+				System.out.println(query);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println("Error in Class" + this.getClass().getName()
+						+ " -> onDeleteAttribute()--" + e.getMessage());
+			}
+			//remove from duplicate copy also
+			duplicateCopyofSelectedBO.attributes.remove(attributeToBeDeleted);
 	}
 
 	public String reinit() {
