@@ -66,6 +66,10 @@ public class ObjectOperations implements Serializable {
 		dropDownObjectTypes.put("Core Business Object (Default)",
 				"Core Business Object");
 
+		// List<BOAttribute> temp = new ArrayList<BOAttribute>();
+		// temp.add(new BOAttribute(1, "Name", "String", "NA", "length<20"));
+		// temp.add(new BOAttribute(1, "ID", "Integer", "NA", "length<20"));
+
 		// read the business objects from DB
 		businessObjects = new DatabaseOperations().readBusinessObjects();
 	}
@@ -185,11 +189,11 @@ public class ObjectOperations implements Serializable {
 
 	public void onDelete(RowEditEvent event) {
 		BusinessObject businessObject = (BusinessObject) event.getObject();
-		//System.out.println(businessObject.getObjectName());
+		// System.out.println(businessObject.getObjectName());
 		businessObjects.remove((BusinessObject) event.getObject());
 		FacesMessage msg = new FacesMessage("Object Deleted");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
-        
+
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -204,10 +208,8 @@ public class ObjectOperations implements Serializable {
 				}
 			}
 		}).start();
-
-		// This code force reloads the page - this is to cover a flaw- when
-		// deleted, ajax is
-		// not working, hence force realding.
+		
+		//this is to force reload the page from backend.
 		ExternalContext ec = FacesContext.getCurrentInstance()
 				.getExternalContext();
 		try {
@@ -227,63 +229,21 @@ public class ObjectOperations implements Serializable {
 		// Check if the attributes are populated. Else load from DB
 		if (selectedBO.getAttributes() == null
 				|| selectedBO.getAttributes().size() == 0) {
-			// remove from main list before making changes
-			businessObjects.remove(selectedBO);
-
 			// get from DB
 			selectedBO.attributes = new DatabaseOperations()
 					.readAttributes(selectedBO.getObjectName());
 
-			// add it back to main list
-			businessObjects.add(selectedBO);
+			// reset it to null if no values have been returned => nothing is
+			// populated yet
 
+			// create a duplicate copy also - useful in deleteAttribute
+			// Operation
+			duplicateCopyofSelectedBO = new BusinessObject();
+			duplicateCopyofSelectedBO.attributes = new ArrayList<BOAttribute>();
+			duplicateCopyofSelectedBO.attributes.addAll(selectedBO.attributes);
 		}
-		//create a duplicate copy also - useful in deleteAttribute Operation
-		duplicateCopyofSelectedBO = new BusinessObject();
-		duplicateCopyofSelectedBO.attributes = new ArrayList<BOAttribute>();
-		duplicateCopyofSelectedBO.attributes.addAll(selectedBO.attributes);
 
 		return "editAttributes";
-	}
-
-	/***************************************************************************
-	 * Method: onDeleteAttribute
-	 * 
-	 * Purpose: This method is invoked when user opts to delete an attribute
-	 ****************************************************************************/
-	public void onDeleteAttribute() {
-		//Find out the attribute that is deleted - for this puropse only duplicateBO is created & updated.
-		BOAttribute attributeToBeDeleted = new BOAttribute();
-		for(BOAttribute iterator : duplicateCopyofSelectedBO.attributes){
-			if(!selectedBO.attributes.contains(iterator)){
-				//implies that is the attribute to be deleted
-				attributeToBeDeleted = iterator;
-			}
-				
-		}
-		// First delete old BO from main list
-		businessObjects.remove(selectedBO);
-		// edit the selected BO
-		selectedBO.attributes.remove(attributeToBeDeleted);
-		// Add it again to the main BO's List
-		businessObjects.add(selectedBO);
-
-		FacesMessage msg = new FacesMessage("Attribute Deleted");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-
-		//Dont use threads for attributes page - has some problem
-		try {
-			String query = "delete from attributes where objectName = '"+selectedBO.getObjectName()+"' and attributeName = '"
-					+ attributeToBeDeleted.getAttributeName()+"'";
-			new DatabaseOperations().updateDB(query);
-			System.out.println(query);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error in Class" + this.getClass().getName()
-					+ " -> onDeleteAttribute()--" + e.getMessage());
-		}
-		//remove from duplicate copy also
-		duplicateCopyofSelectedBO.attributes.remove(attributeToBeDeleted);
 	}
 
 	/***************************************************************************
@@ -308,60 +268,143 @@ public class ObjectOperations implements Serializable {
 	 * 
 	 ****************************************************************************/
 	public void addAttribute() {
+		boolean exists = false;
+
 		if (attribute.getAttributeName().equals("")
-				|| attribute.getAttributeType().equals("")
-				|| attribute.getBusinessRule().equals("")) {
+				|| attribute.getAttributeType().equals("")) {
+			// || attribute.getBusinessRule().equals("")) {
 			FacesMessage msg = new FacesMessage(
 					"Please enter all the input values correctly");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		} else {
-			boolean exists = false;
-			for (BOAttribute iterator : selectedBO.attributes) {
-				if (iterator.getAttributeName().equalsIgnoreCase(
-						attribute.getAttributeName()))
+			for (BOAttribute temp : selectedBO.attributes) {
+				if (attribute.getAttributeName().equalsIgnoreCase(
+						temp.getAttributeName())) {
 					exists = true;
+				}
+				System.out.println("Test---------------"
+						+ temp.getAttributeName() + "-----"
+						+ attribute.getAttributeName() + "-----" + exists);
 			}
 			if (exists) {
 				FacesMessage msg = new FacesMessage("Attribute name "
 						+ attribute.getAttributeName()
 						+ " already exists.Please choose a different name");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
+				
+				
+				
 			} else {
-				
-				selectedBO.addAttribute(attribute.getAttributeName(),
-						attribute.getAttributeType(),
-						attribute.getMandatoryType(),
-						attribute.getBusinessRule());
-				
-				duplicateCopyofSelectedBO.addAttribute(attribute.getAttributeName(),
-						attribute.getAttributeType(),
-						attribute.getMandatoryType(),
-						attribute.getBusinessRule());
-				
-
-				// push values to DB also
-				// Note - using THREADS gave raise to ERRORS- So not using
 				try {
-					String query = "insert into attributes values (" + "'"
-							+ selectedBO.getObjectName() + "'" + ","
-							+ "nextval('art_seq')" + "," + "'"
-							+ attribute.getAttributeName() + "'" + "," + "'"
-							+ attribute.getAttributeType() + "'" + "," + "'"
-							+ attribute.getMandatoryType() + "'" + "," + "'"
-							+ attribute.getBusinessRule() + "'" + " )";
-					System.out.println(query);
-					new DatabaseOperations().updateDB(query);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("Error in Class"
-							+ this.getClass().getName()
-							+ " -> addAttribute()--" + e.getMessage());
-				}
-				// reset all values
-				attribute = new BOAttribute();
 
+					selectedBO.addAttribute(attribute.getAttributeName(),
+							attribute.getAttributeType(),
+							attribute.getMandatoryType(),
+							attribute.getBusinessRule());
+
+					duplicateCopyofSelectedBO.addAttribute(
+							attribute.getAttributeName(),
+							attribute.getAttributeType(),
+							attribute.getMandatoryType(),
+							attribute.getBusinessRule());
+
+					System.out.println(attribute.getConditionalMandatroy());
+
+					// push values to DB also
+					// Note - using THREADS gave raise to ERRORS- So not using
+					try {
+						String query = "insert into attributes values (" + "'"
+								+ selectedBO.getObjectName() + "'" + ","
+								+ "nextval('art_seq')" + "," + "'"
+								+ attribute.getAttributeName() + "'" + ","
+								+ "'" + attribute.getAttributeType() + "'"
+								+ "," + "'" + attribute.getMandatoryType()
+								+ "'" + "," + "'" + attribute.getBusinessRule()
+								+ "'" + " )";
+						System.out.println(query);
+						new DatabaseOperations().updateDB(query);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						System.out.println("Error in Class"
+								+ this.getClass().getName()
+								+ " -> addAttribute()--" + e.getMessage());
+					}
+				} finally {
+					// reset all values
+					attribute = new BOAttribute();
+				}
 			}
 		}
+	}
+
+	/***************************************************************************
+	 * Method: onDeleteAttribute
+	 * 
+	 * Purpose: This method is invoked when user opts to delete an attribute
+	 ****************************************************************************/
+	public void onDeleteAttribute() {
+		// Find out the attribute that is deleted - for this puropse only
+		// duplicateBO is created & updated.
+		BOAttribute attributeToBeDeleted = new BOAttribute();
+		for (BOAttribute iterator : duplicateCopyofSelectedBO.attributes) {
+			if (!selectedBO.attributes.contains(iterator)) {
+				// implies that is the attribute to be deleted
+				attributeToBeDeleted = iterator;
+			}
+
+		}
+		// First delete old BO from main list
+		businessObjects.remove(selectedBO);
+		// edit the selected BO
+		selectedBO.attributes.remove(attributeToBeDeleted);
+		// Add it again to the main BO's List
+		businessObjects.add(selectedBO);
+
+		FacesMessage msg = new FacesMessage("Attribute Deleted");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+
+		// Dont use threads for attributes page - has some problem
+		try {
+			String query = "delete from attributes where objectName = '"
+					+ selectedBO.getObjectName() + "' and attributeName = '"
+					+ attributeToBeDeleted.getAttributeName() + "'";
+			new DatabaseOperations().updateDB(query);
+			System.out.println(query);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error in Class" + this.getClass().getName()
+					+ " -> onDeleteAttribute()--" + e.getMessage());
+		}
+		// remove from duplicate copy also
+		duplicateCopyofSelectedBO.attributes.remove(attributeToBeDeleted);
+	}
+
+	/***************************************************************************
+	 * Method: onEdit
+	 * 
+	 * Purpose: This method is invoked when user opts to edit a row in datatable
+	 * 
+	 * Attributes:
+	 * 
+	 * checks:
+	 * 
+	 * Notes: 1.Need to add db code
+	 ****************************************************************************/
+	public void onEditAttribute(RowEditEvent event) {
+
+	}
+
+	public void onDeleteAttribute(RowEditEvent event) {
+		// attributes.remove((BOAttribute) event.getObject());
+		selectedBO.attributes.remove((BOAttribute) event.getObject());
+		FacesMessage msg = new FacesMessage("Attribute Deleted");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+	public String reinit() {
+		setAttribute(new BOAttribute());
+		return null;
+
 	}
 
 	public List<BusinessObject> getBusinessObjects() {
