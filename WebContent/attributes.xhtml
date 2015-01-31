@@ -55,8 +55,8 @@
 					</a>
 						<ul class="list-unstyled collapse in" id="userMenu">
 							<li><a href="home.xhtml"><i
-									class="glyphicon glyphicon-folder-close"></i> Business Objects</a></li>
-							<li><a href="scenarios.xhtml"><i class="glyphicon glyphicon-eye-open"></i>
+									class="glyphicon glyphicon-folder-close"></i> Objects</a></li>
+							<li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>
 									Scenarios</a></li>
 							<li><a href="#"><i class="glyphicon glyphicon-ok"></i>
 									Business Rules</a></li>
@@ -93,14 +93,13 @@
 					            <f:selectItem itemLabel="Mandatory" itemValue="Mandatory" />
 					            <f:selectItem itemLabel="Conditional Mandatory" itemValue="Conditional Mandatory" />
 					            <f:selectItem itemLabel="NA" itemValue="NA" />
-					            <f:ajax event="change" execute="@this" render="conditionalMandatoryLabel conditionalMandatoryInput" />
+					            <f:ajax event="change" execute="@this" render="cm cm1" />
 					        </p:selectOneRadio>
 						
-							<h:panelGroup id="conditionalMandatoryLabel">
+							<h:panelGroup id="cm">
 								<p:outputLabel value="Select Conditional Attributes" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}"/>
 							</h:panelGroup>
-							
-							<h:panelGroup id="conditionalMandatoryInput">
+							<h:panelGroup id="cm1">
 								<p:selectManyMenu id="conditionalMandatory" value="#{objectOperations.attribute.conditionalMandatroy}" rendered="#{objectOperations.attribute.mandatoryType == 'Conditional Mandatory'}">
 									<f:selectItems value="#{objectOperations.selectedBO.attributes}" var="attribute" itemLabel="#{attribute.attributeName}" itemValue="#{attribute.attributeName}"></f:selectItems>
 								</p:selectManyMenu>
@@ -114,12 +113,14 @@
 							</h:panelGroup>
 							
 							<p:commandButton id="btn_reset" value="Reset" type="reset"/>
-							 
-							 <p:commandButton id="btn_add" value="Add Attribute"
-								update="attributesList msgs adder @parent" action="#{objectOperations.addAttribute}">
-								<p:collector value="#{objectOperations.attribute}"
-									addTo="#{objectOperations.selectedBO.attributes}" unique="true" />
-							</p:commandButton>
+													
+							<p:commandButton id="btn_add" value="Add Attribute"
+                                update="attributesList msgs adder @parent" action="#{objectOperations.addAttribute}">
+                                <!-- This directly updates the data structure & we would loose control over it. So doing the same @ backend with better control
+                                <p:collector value="#{objectOperations.attribute}"
+                                    addTo="#{objectOperations.selectedBO.attributes}" unique="true" /> -->
+                            </p:commandButton>
+					
 						</h:panelGrid>
 					</p:panel>
 					
