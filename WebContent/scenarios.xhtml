@@ -11,14 +11,6 @@
 	<h:outputStylesheet name="bootstrap/css/Custom.css" />
 	<h:outputStylesheet name="bootstrap/css/styles.css" />
 
-	<script type="text/javascript">
-    function handleDrop(event, ui) {
-        var droppedObject = ui.draggable;
- 
-        droppedObject.fadeOut('slow');
-    }
-</script>
-
 </h:head>
 <h:body>
 	<!-- Header -->
@@ -81,8 +73,13 @@
 
 			<div class="col-md-8">
 				<h:form id="scenarioForm">
+				  <p:growl id="msgs" />
+					<h:outputLabel for="ajax" value="Scenario Name : " />
+        			<p:inplace id="ajax" editor="true">
+            		<p:inputText value="#{scenarioOperations.scenarioName}" required="true" label="text" />
+       				 </p:inplace>
 					<p:fieldset legend="Available Business Objects"
-						style="margin-top:40px">
+						style="margin-top:10px">
 						<p:dataTable id="availableObjects" var="object"
 							value="#{scenarioOperations.businessObjects}" scrollable="true">
 							<p:column style="width:27px">
@@ -94,8 +91,18 @@
 							</p:column>
 						</p:dataTable>
 						<div align="center">
+						<table>
+						<tr>
+						<td>
 							<p:commandButton id="btn_reset" value="Reset"
 								action="#{scenarioOperations.reset}" update="scenarioForm" />
+						</td>
+						<td>
+							<p:commandButton id="btn_save" value="Save"
+								action="#{scenarioOperations.saveScenario}" update="msgs" />
+						</td>
+						</tr>
+						</table>
 						</div>
 					</p:fieldset>
 					<!-- <div class="col-sm-9"> -->
@@ -123,7 +130,7 @@
 										activeStyleClass="ui-state-highlight"
 										datasource="availableObjects" onDrop="handleDrop">
 										<p:ajax listener="#{scenarioOperations.onDragDropPreReq}"
-											update="dropAreaForPreReq availableObjects" />
+											update="dropAreaForPreReq availableObjects msgs" />
 									</p:droppable>
 								</div>
 							</td>
@@ -149,7 +156,7 @@
 										activeStyleClass="ui-state-highlight"
 										datasource="availableObjects" onDrop="handleDrop">
 										<p:ajax listener="#{scenarioOperations.onDragDropInput}"
-											update="dropAreaForInput availableObjects" />
+											update="dropAreaForInput availableObjects msgs" />
 									</p:droppable>
 								</div>
 							</td>
@@ -175,7 +182,7 @@
 										activeStyleClass="ui-state-highlight"
 										datasource="availableObjects" onDrop="handleDrop">
 										<p:ajax listener="#{scenarioOperations.onDragDropOutput}"
-											update="dropAreaForOutput availableObjects" />
+											update="dropAreaForOutput availableObjects msgs" />
 									</p:droppable>
 								</div>
 							</td>
@@ -189,6 +196,13 @@
 			<!--/col-span-9-->
 		</div>
 	</div>
+<script type="text/javascript">
+    function handleDrop(event, ui) {
+        var droppedObject = ui.draggable;
+ 
+        droppedObject.fadeOut('slow');
+    }
+</script>
 	<!-- /Main -->
 </h:body>
 </html>

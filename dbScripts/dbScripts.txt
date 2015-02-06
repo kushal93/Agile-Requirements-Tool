@@ -1,0 +1,20 @@
+CREATE TABLE `scenario_bo_mapping` (
+  `scenario_bo_mapping_id` int(11) NOT NULL AUTO_INCREMENT,
+  `scenario_id` int(11) NOT NULL,
+  `objectID` bigint(20) NOT NULL,
+  `objectType` varchar(45) NOT NULL,
+  PRIMARY KEY (`scenario_bo_mapping_id`),
+  KEY `fk_scenario_bo_mapping_1_idx` (`scenario_id`),
+  KEY `fk_scenario_bo_mapping_2_idx` (`objectID`),
+  CONSTRAINT `fk_scenario_bo_mapping_1` FOREIGN KEY (`scenario_id`) REFERENCES `scenarios` (`scenarios_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scenario_bo_mapping_2` FOREIGN KEY (`objectID`) REFERENCES `business_objects` (`objectID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1
+
+----------------------------------------------------------
+
+CREATE TABLE `scenarios` (
+  `scenarios_id` int(11) NOT NULL AUTO_INCREMENT,
+  `scenario_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`scenarios_id`),
+  UNIQUE KEY `scenario_name_UNIQUE` (`scenario_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1

@@ -4,13 +4,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
+
+import com.google.visualization.*;
+import com.google.visualization.datasource.datatable.ColumnDescription;
+import com.google.visualization.datasource.datatable.DataTable;
 
 import art.datastructures.BOAttribute;
 import art.datastructures.BusinessObject;
+import art.datastructures.Scenario;
 
 public class DatabaseOperations {
 
@@ -43,6 +48,29 @@ public class DatabaseOperations {
 			statement = connection.createStatement();
 			// resultSet gets the result of the SQL query
 			resultSet = statement.executeQuery(query);
+			
+		} catch (Exception e) {
+			System.out.println("Error in Database Operations :"
+					+ e.getMessage());
+	
+		}
+		return resultSet;
+
+	}
+	
+	public ArrayList<String> executegetColumnQuery(String query,int columnIndex) {
+		ArrayList<String> resultString = new ArrayList<String>();
+		
+		try {
+			// statements allow to issue SQL queries to the database
+			statement = connection.createStatement();
+			// resultSet gets the result of the SQL query
+			resultSet = statement.executeQuery(query);
+		    //get the values from resultSet
+			while (resultSet.next()) {
+			resultString.add(resultSet.getString(columnIndex));
+		    }
+		    
 		} catch (Exception e) {
 			System.out.println("Error in Database Operations :"
 					+ e.getMessage());
@@ -58,9 +86,10 @@ public class DatabaseOperations {
 						+ e.getMessage());
 			}
 		}
-		return resultSet;
+		return resultString;
 
 	}
+
 
 	public int updateDB(String query) {
 		int flag=0;
@@ -170,4 +199,27 @@ public class DatabaseOperations {
 
 		return attributes;
 	}
+	
+	public ArrayList<Scenario> getScenarioList() {
+		ArrayList<String> scenarioNameList = new ArrayList<String>();
+		ArrayList<Scenario> scenario = new ArrayList<Scenario>();
+		String query = "select scenario_name from scenarios";
+		try {
+			DatabaseOperations dbOp = new DatabaseOperations();
+			scenarioNameList = dbOp.executegetColumnQuery(query,1);
+			System.out.println("Message as per JK's advice -------------" + scenarioNameList);
+	       
+			for(int i=0; i< scenarioNameList.size();i++) {
+	          Scenario temp = new Scenario();
+	          temp.setScenarioName(scenarioNameList.get(i));
+	          scenario.add(temp);
+	        }
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+				
+		return scenario;
+	}
+	
 }
