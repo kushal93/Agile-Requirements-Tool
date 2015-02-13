@@ -202,16 +202,20 @@ public class DatabaseOperations {
 	
 	public ArrayList<Scenario> getScenarioList() {
 		ArrayList<String> scenarioNameList = new ArrayList<String>();
+		ArrayList<String> scenarioIDList = new ArrayList<String>();
 		ArrayList<Scenario> scenario = new ArrayList<Scenario>();
-		String query = "select scenario_name from scenarios";
+		String query1 = "select scenario_name from scenarios";
+		String query2 = "select scenarios_id from scenarios";
 		try {
 			DatabaseOperations dbOp = new DatabaseOperations();
-			scenarioNameList = dbOp.executegetColumnQuery(query,1);
-			System.out.println("Message as per JK's advice -------------" + scenarioNameList);
-	       
+			scenarioNameList = dbOp.executegetColumnQuery(query1,1);
+			dbOp = new DatabaseOperations();
+			scenarioIDList = dbOp.executegetColumnQuery(query2, 1);
+	        
 			for(int i=0; i< scenarioNameList.size();i++) {
 	          Scenario temp = new Scenario();
 	          temp.setScenarioName(scenarioNameList.get(i));
+	          temp.setScenarioID(Integer.parseInt(scenarioIDList.get(i)));
 	          scenario.add(temp);
 	        }
 			
@@ -220,6 +224,27 @@ public class DatabaseOperations {
 		}
 				
 		return scenario;
+	}
+	
+	public ArrayList<String[]> getResultsetString (String query) {
+		ArrayList <String[]> result = new ArrayList<String[]>();
+		DatabaseOperations dbOp = new DatabaseOperations();
+		ResultSet rs = dbOp.executeQuery(query);
+		try {
+		int columnCount = rs.getMetaData().getColumnCount();
+		while(rs.next())
+		{
+		    String[] row = new String[columnCount];
+		    for (int i=0; i <columnCount ; i++)
+		    {
+		       row[i] = rs.getString(i + 1);
+		    }
+		    result.add(row);
+		}
+		} catch (SQLException e) {
+		  System.out.println(e.getMessage());	
+		}
+		return result;
 	}
 	
 }

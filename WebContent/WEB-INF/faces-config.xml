@@ -20,14 +20,19 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
-		<managed-bean-name>scenarioOperations</managed-bean-name>
-		<managed-bean-class>art.dashboard.ScenarioOperations</managed-bean-class>
-		<managed-bean-scope>application</managed-bean-scope>
-	</managed-bean>
-	<managed-bean>
 		<managed-bean-name>scenarioListOperations</managed-bean-name>
 		<managed-bean-class>art.dashboard.ScenarioListOperations</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>scenarioOperations</managed-bean-name>
+		<managed-bean-class>art.dashboard.ScenarioOperations</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>editScenarioOperations</managed-bean-name>
+		<managed-bean-class>art.dashboard.EditScenarioOperations</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
 	</managed-bean>
 	<navigation-rule>
 		<display-name>home</display-name>
@@ -35,6 +40,14 @@
 		<navigation-case>
 			<from-outcome>editAttributes</from-outcome>
 			<to-view-id>/attributes.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<display-name>Scenario_List</display-name>
+		<from-view-id>/scenario_list.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>editScenario</from-outcome>
+			<to-view-id>/editScenarios.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 

@@ -76,12 +76,12 @@
 				  <p:growl id="msgs" />
 					<h:outputLabel for="ajax" value="Scenario Name : " />
         			<p:inplace id="ajax" editor="true">
-            		<p:inputText value="#{scenarioOperations.scenarioName}" required="true" label="text" />
+            		<p:inputText value="#{editScenarioOperations.scenarioName}" required="true" label="text" />
        				 </p:inplace>
 					<p:fieldset legend="Available Business Objects"
 						style="margin-top:10px">
 						<p:dataTable id="availableObjects" var="object"
-							value="#{scenarioOperations.businessObjects}" scrollable="true">
+							value="#{editScenarioOperations.businessObjects}" scrollable="true">
 							<p:column style="width:27px">
 								<h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
 								<p:draggable for="dragIcon" revert="true" helper="clone" />
@@ -95,11 +95,11 @@
 						<tr>
 						<td>
 							<p:commandButton id="btn_reset" value="Reset"
-								action="#{scenarioOperations.reset}" update="scenarioForm" />
+								action="#{editScenarioOperations.reset}" update="scenarioForm" />
 						</td>
 						<td>
 							<p:commandButton id="btn_save" value="Save"
-								action="#{scenarioOperations.saveScenario}" update="msgs" />
+								action="#{editScenarioOperations.saveScenario}" update="msgs" />
 						</td>
 						</tr>
 						</table>
@@ -114,11 +114,11 @@
 										legend="Pre-Requisites">
 										<p:outputPanel id="dropAreaForPreReq">
 											<h:outputText value="!!!Drop here!!!"
-												rendered="#{empty scenarioOperations.preReqObjects}"
+												rendered="#{empty editScenarioOperations.preReqObjects}"
 												style="font-size:15px;" />
 											<p:dataTable id="preReqTable" var="preReqObject"
-												value="#{scenarioOperations.preReqObjects}"
-												rendered="#{not empty scenarioOperations.preReqObjects}"
+												value="#{editScenarioOperations.selectedScenarioMain.preReqObjects}"
+												rendered="#{not empty editScenarioOperations.preReqObjects}"
 												scrollable="true">
 												<p:column headerText="Name">
 													<h:outputText value="#{preReqObject.objectName}" />
@@ -129,7 +129,7 @@
 									<p:droppable for="prereq" tolerance="touch"
 										activeStyleClass="ui-state-highlight"
 										datasource="availableObjects" onDrop="handleDrop">
-										<p:ajax listener="#{scenarioOperations.onDragDropPreReq}"
+										<p:ajax listener="#{editScenarioOperations.onDragDropPreReq}"
 											update="dropAreaForPreReq availableObjects msgs" />
 									</p:droppable>
 								</div>
@@ -140,11 +140,11 @@
 										legend="Input Object">
 										<p:outputPanel id="dropAreaForInput">
 											<h:outputText value="!!!Drop here!!!"
-												rendered="#{empty scenarioOperations.inputObjects}"
+												rendered="#{empty editScenarioOperations.inputObjects}"
 												style="font-size:15px;" />
 											<p:dataTable id="inputTable" var="inputObject"
-												value="#{scenarioOperations.inputObjects}"
-												rendered="#{not empty scenarioOperations.inputObjects}"
+												value="#{editScenarioOperations.selectedScenarioMain.inputObjects}"
+												rendered="#{not empty editScenarioOperations.inputObjects}"
 												scrollable="true">
 												<p:column headerText="Name">
 													<h:outputText value="#{inputObject.objectName}" />
@@ -155,7 +155,7 @@
 									<p:droppable for="input" tolerance="touch"
 										activeStyleClass="ui-state-highlight"
 										datasource="availableObjects" onDrop="handleDrop">
-										<p:ajax listener="#{scenarioOperations.onDragDropInput}"
+										<p:ajax listener="#{editScenarioOperations.onDragDropInput}"
 											update="dropAreaForInput availableObjects msgs" />
 									</p:droppable>
 								</div>
@@ -166,11 +166,11 @@
 										legend="Outputs">
 										<p:outputPanel id="dropAreaForOutput">
 											<h:outputText value="!!!Drop here!!!"
-												rendered="#{empty scenarioOperations.outputObjects}"
+												rendered="#{empty editScenarioOperations.selectedScenarioMain.outputObjects}"
 												style="font-size:15px;" />
 											<p:dataTable id="outPutTable" var="outputObject"
-												value="#{scenarioOperations.outputObjects}"
-												rendered="#{not empty scenarioOperations.outputObjects}"
+												value="#{editScenarioOperations.selectedScenarioMain.outputObjects}"
+												rendered="#{not empty editScenarioOperations.selectedScenarioMain.outputObjects}"
 												scrollable="true">
 												<p:column headerText="Name">
 													<h:outputText value="#{outputObject.objectName}" />
@@ -181,7 +181,7 @@
 									<p:droppable for="output" tolerance="touch"
 										activeStyleClass="ui-state-highlight"
 										datasource="availableObjects" onDrop="handleDrop">
-										<p:ajax listener="#{scenarioOperations.onDragDropOutput}"
+										<p:ajax listener="#{editScenarioOperations.onDragDropOutput}"
 											update="dropAreaForOutput availableObjects msgs" />
 									</p:droppable>
 								</div>

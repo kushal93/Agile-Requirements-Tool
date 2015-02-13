@@ -55,7 +55,7 @@
 						<ul class="list-unstyled collapse in">
 							<li><a href="home.xhtml"><i
 									class="glyphicon glyphicon-folder-close"></i>Business Objects</a></li>
-							<li><a href="scenarios_list.xhtml"><i
+							<li><a href="scenario_list.xhtml"><i
 									class="glyphicon glyphicon-eye-open"></i> Scenarios</a></li>
 							<li><a href="#"><i class="glyphicon glyphicon-ok"></i>
 									Business Rules</a></li>
@@ -78,7 +78,7 @@
 					<p:fieldset legend="Scenario List" style="margin-top:10px">
 						<p:outputPanel id="scenarioList">
 							<p:dataTable value="#{scenarioListOperations.scenarioList}"
-								var="scenarioList" id="scenarioListTable">
+								var="scenarioList" id="scenarioListTable" scrollable="true">
 
 								<p:column headerText="Scenario Name">
 									<h:outputText value="#{scenarioList.scenarioName}" />
@@ -88,11 +88,13 @@
 									<div>
 										<table>
 											<tr>
-												<td><p:commandButton value="Edit"
-														action="#{scenarioListOperations.onEditScenario}">
+												<td><p:commandButton id="editScn" value="Edit"
+														ajax="false" process="@this" type="submit" 
+														action="#{editScenarioOperations.editScenario(scenarioList)}">
 													</p:commandButton></td>
 												<td><p:commandButton value="Remove"
-														action="#{scenarioListOperations.onRemoveScenario}">
+														action="#{scenarioListOperations.onRemoveScenario(scenarioList)}"
+														update=":scenarioForm:scenarioListTable">
 													</p:commandButton></td>
 											</tr>
 										</table>
@@ -101,7 +103,8 @@
 							</p:dataTable>
 						</p:outputPanel>
 						<div align="center" style="margin-top:10px">
-							<p:commandButton value="New Scenario" action="scenarios.xhtml">
+							<p:commandButton value="New Scenario" 
+							  action="scenarios.xhtml">
 							</p:commandButton>
 						</div>
 					</p:fieldset>

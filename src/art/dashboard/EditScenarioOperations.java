@@ -44,9 +44,9 @@ import art.datastructures.Scenario;
 import com.google.visualization.*;
 import com.google.visualization.datasource.datatable.DataTable;
 
-@ManagedBean(value = "scenarioOperations")
+@ManagedBean(value = "editScenarioOperations")
 @SessionScoped
-public class ScenarioOperations implements Serializable {
+public class EditScenarioOperations implements Serializable {
 	/**
 	 * Added serialversion ID
 	 */
@@ -60,16 +60,115 @@ public class ScenarioOperations implements Serializable {
 	private BusinessObject selectedInputObject = new BusinessObject();
 	private BusinessObject selectedOutputObject = new BusinessObject();
 	private String scenarioName;
-	private Scenario selectedScenarioMain = new Scenario();
+	private Scenario selectedScenarioMain;
+	
+	public Scenario getSelectedScenarioMain() {
+		return selectedScenarioMain;
+	}
 
-	public ScenarioOperations() {
+	public void setSelectedScenarioMain(Scenario selectedScenarioMain) {
+		this.selectedScenarioMain = selectedScenarioMain;
+	}
 
+	public EditScenarioOperations() {
+		
+		businessObjects = new DatabaseOperations().readBusinessObjects();
+		businessObjectsCopy.addAll(businessObjects);
+		//preReqObjects.add(new BusinessObject(24,"Core","Name",null));
+		//selectedScenarioMain.setPreReqObjects(preReqObjects);
+				
+	}
+	
+	public EditScenarioOperations(Scenario selectedScenario) {
+		this();
 		// read the business objects from DB
 		businessObjects = new DatabaseOperations().readBusinessObjects();
 		businessObjectsCopy.addAll(businessObjects);
 		scenarioName = "Enter Scenario Name";
-	}
+		//scenarioName = selectedScenario.getScenarioName();
+		
+		ArrayList<ArrayList<String>> scenarioDetails = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String>> objectDetails = new ArrayList<ArrayList<String>>();
+		ArrayList<String[]> scenarioMapping = new ArrayList<String[]>();
+		ArrayList<String> scenarioNameList = new ArrayList<String>();
+		DatabaseOperations dbOp = new DatabaseOperations();
 
+		
+		 String query = "select scenario_name from scenarios where scenarios_id = '" +
+		 selectedScenario.getScenarioID() + "'"; System.out.println(query);
+		 scenarioNameList = dbOp.executegetColumnQuery(query, 1);
+		 
+		 scenarioName = scenarioNameList.get(0);
+
+		query = "select * from scenario_bo_mapping where scenario_id ='"
+				+ selectedScenario.getScenarioID() + "'";
+		scenarioMapping = dbOp.getResultsetString(query);
+
+		for (String[] temp : scenarioMapping) {
+			ArrayList<String> stringList = new ArrayList<String>(
+					Arrays.asList(temp));
+			scenarioDetails.add(stringList);
+		}
+
+		query = "select * from business_objects";
+		scenarioMapping = dbOp.getResultsetString(query);
+
+		for (String[] temp : scenarioMapping) {
+			ArrayList<String> stringList = new ArrayList<String>(
+					Arrays.asList(temp));
+			objectDetails.add(stringList);
+		}
+
+		for (ArrayList<String> temp : scenarioDetails) {
+			if (temp.get(3) == "Pre-Requisite") {
+				ArrayList<String> objInfo = new ArrayList<String>();
+				BusinessObject bo = new BusinessObject();
+				bo.setObjectID(Integer.parseInt(temp.get(2)));
+
+				query = "select objectName from business_objects where objectID = '"
+						+ temp.get(2) + "'";
+				dbOp = new DatabaseOperations();
+				objInfo = dbOp.executegetColumnQuery(query, 1);
+				
+				bo.setObjectName(objInfo.get(0));
+				
+				preReqObjects.add(bo);
+			}
+			
+			if (temp.get(3) == "Input") {
+				ArrayList<String> objInfo = new ArrayList<String>();
+				BusinessObject bo = new BusinessObject();
+				bo.setObjectID(Integer.parseInt(temp.get(2)));
+
+				query = "select objectName from business_objects where objectID = '"
+						+ temp.get(2) + "'";
+				dbOp = new DatabaseOperations();
+				objInfo = dbOp.executegetColumnQuery(query, 1);
+				
+				bo.setObjectName(objInfo.get(0));
+				
+				inputObject.add(bo);
+			}
+			
+			if (temp.get(3) == "Output") {
+				ArrayList<String> objInfo = new ArrayList<String>();
+				BusinessObject bo = new BusinessObject();
+				bo.setObjectID(Integer.parseInt(temp.get(2)));
+
+				query = "select objectName from business_objects where objectID = '"
+						+ temp.get(2) + "'";
+				dbOp = new DatabaseOperations();
+				objInfo = dbOp.executegetColumnQuery(query, 1);
+				
+				bo.setObjectName(objInfo.get(0));
+				
+				outputObject.add(bo);
+			}
+			
+		}
+		
+	}
+	
 	public ArrayList<BusinessObject> getBusinessObjects() {
 		return businessObjects;
 	}
@@ -110,6 +209,7 @@ public class ScenarioOperations implements Serializable {
 		BusinessObject object = (BusinessObject) event.getData();
 
 		preReqObjects.add(object);
+		selectedScenarioMain.setPreReqObjects(preReqObjects);
 		businessObjects.remove(object);
 
 		FacesContext.getCurrentInstance().addMessage(
@@ -122,6 +222,7 @@ public class ScenarioOperations implements Serializable {
 		BusinessObject object = (BusinessObject) event.getData();
 
 		inputObject.add(object);
+		selectedScenarioMain.setInputObjects(inputObject);
 		businessObjects.remove(object);
 
 		FacesContext.getCurrentInstance().addMessage(
@@ -134,6 +235,7 @@ public class ScenarioOperations implements Serializable {
 		BusinessObject object = (BusinessObject) event.getData();
 
 		outputObject.add(object);
+		selectedScenarioMain.setOutputObjects(outputObject);
 		businessObjects.remove(object);
 		FacesMessage msg = new FacesMessage(object.getObjectName() + " added");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -368,14 +470,5 @@ public class ScenarioOperations implements Serializable {
 		return "editScenario";
 
 	}
-
-	public Scenario getSelectedScenarioMain() {
-		return selectedScenarioMain;
-	}
-
-	public void setSelectedScenarioMain(Scenario selectedScenarioMain) {
-		this.selectedScenarioMain = selectedScenarioMain;
-	}
-
 
 }

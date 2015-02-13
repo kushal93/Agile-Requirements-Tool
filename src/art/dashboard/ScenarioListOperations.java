@@ -27,6 +27,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIData;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.event.DragDropEvent;
@@ -43,7 +44,7 @@ import com.google.visualization.*;
 import com.google.visualization.datasource.datatable.DataTable;
 
 @ManagedBean(value = "scenarioListOperations")
-@SessionScoped
+@ViewScoped
 public class ScenarioListOperations implements Serializable {
 	/**
 	 * Added serialversion ID
@@ -61,8 +62,8 @@ public class ScenarioListOperations implements Serializable {
 	public ScenarioListOperations() {
 
 		// read scenario list from DataBase
-       	scenarioList = new DatabaseOperations().getScenarioList();
-    
+		scenarioList = new DatabaseOperations().getScenarioList();
+
 	}
 
 	public ArrayList<BusinessObject> getPreReqObjects() {
@@ -89,16 +90,13 @@ public class ScenarioListOperations implements Serializable {
 		return selectedOutputObject;
 	}
 
-
 	public void setPreReqObjects(ArrayList<BusinessObject> objects) {
 		this.preReqObjects = objects;
 	}
 
-
 	public void setSelectedObject(BusinessObject object) {
 		this.selectedPreReqObject = object;
 	}
-
 
 	public String getScenarioName() {
 		return scenarioName;
@@ -107,17 +105,32 @@ public class ScenarioListOperations implements Serializable {
 	public void setScenarioName(String text) {
 		this.scenarioName = text;
 	}
-	
-	public ArrayList<Scenario> getScenarioList(){
+
+	public ArrayList<Scenario> getScenarioList() {
 		return scenarioList;
 	}
 
 	public void setScenarioList(ArrayList<Scenario> scenarioList) {
 		this.scenarioList = scenarioList;
 	}
-	
-	public void onRemoveScenarios(Scenario e) {
+
+	public void onRemoveScenario(Scenario scenario) {
+		String query = "delete from scenario_bo_mapping where scenario_id = '"
+				+ scenario.getScenarioID() + "'";
+
+		DatabaseOperations dbOp = new DatabaseOperations();
+		dbOp.updateDB(query);
+
+		query = "delete from scenarios where scenario_name = '"
+				+ scenario.getScenarioName() + "'";
+		dbOp = new DatabaseOperations();
+		dbOp.updateDB(query);
 		
+		scenarioList.remove(scenario);
+		
+		FacesMessage msg = new FacesMessage("Scenario" + scenario.getScenarioID() + "Deleted");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+
 	}
-	
+
 }
