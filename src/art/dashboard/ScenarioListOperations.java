@@ -132,5 +132,6 @@ public class ScenarioListOperations implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 
 	}
+	
 
 }

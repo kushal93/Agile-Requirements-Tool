@@ -73,15 +73,17 @@
 
 			<div class="col-md-8">
 				<h:form id="scenarioForm">
-				  <p:growl id="msgs" />
+					<p:growl id="msgs" />
 					<h:outputLabel for="ajax" value="Scenario Name : " />
-        			<p:inplace id="ajax" editor="true">
-            		<p:inputText value="#{editScenarioOperations.scenarioName}" required="true" label="text" />
-       				 </p:inplace>
+					<p:inplace id="ajax" editor="true">
+						<p:inputText value="#{editScenarioOperations.scenarioName}"
+							required="true" label="text" />
+					</p:inplace>
 					<p:fieldset legend="Available Business Objects"
 						style="margin-top:10px">
 						<p:dataTable id="availableObjects" var="object"
-							value="#{editScenarioOperations.businessObjects}" scrollable="true">
+							value="#{editScenarioOperations.businessObjectsCopy}"
+							scrollable="true">
 							<p:column style="width:27px">
 								<h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
 								<p:draggable for="dragIcon" revert="true" helper="clone" />
@@ -91,18 +93,16 @@
 							</p:column>
 						</p:dataTable>
 						<div align="center">
-						<table>
-						<tr>
-						<td>
-							<p:commandButton id="btn_reset" value="Reset"
-								action="#{editScenarioOperations.reset}" update="scenarioForm" />
-						</td>
-						<td>
-							<p:commandButton id="btn_save" value="Save"
-								action="#{editScenarioOperations.saveScenario}" update="msgs" />
-						</td>
-						</tr>
-						</table>
+							<table>
+								<tr>
+									<td><p:commandButton id="btn_reset" value="Reset"
+											action="#{editScenarioOperations.reset}"
+											update="scenarioForm" /></td>
+									<td><p:commandButton id="btn_save" value="Save"
+											action="#{editScenarioOperations.saveScenario}" update="msgs" />
+									</td>
+								</tr>
+							</table>
 						</div>
 					</p:fieldset>
 					<!-- <div class="col-sm-9"> -->
@@ -114,11 +114,11 @@
 										legend="Pre-Requisites">
 										<p:outputPanel id="dropAreaForPreReq">
 											<h:outputText value="!!!Drop here!!!"
-												rendered="#{empty editScenarioOperations.preReqObjects}"
+												rendered="#{empty editScenarioOperations.selectedScenarioMain.preReqObjects}"
 												style="font-size:15px;" />
 											<p:dataTable id="preReqTable" var="preReqObject"
 												value="#{editScenarioOperations.selectedScenarioMain.preReqObjects}"
-												rendered="#{not empty editScenarioOperations.preReqObjects}"
+												rendered="#{not empty editScenarioOperations.selectedScenarioMain.preReqObjects}"
 												scrollable="true">
 												<p:column headerText="Name">
 													<h:outputText value="#{preReqObject.objectName}" />
@@ -188,7 +188,14 @@
 							</td>
 						</tr>
 					</table>
-					
+
+					<!-- <p:dataTable var="preReqObject"
+												value="#{editScenarioOperations.inputObjects}"
+												scrollable="true">
+												<p:column headerText="#{editScenarioOperations.test}">
+													<h:outputText value="#{preReqObject.objectName}" />
+												</p:column>
+											</p:dataTable> -->
 
 					<!-- </div> -->
 				</h:form>
@@ -196,13 +203,13 @@
 			<!--/col-span-9-->
 		</div>
 	</div>
-<script type="text/javascript">
-    function handleDrop(event, ui) {
-        var droppedObject = ui.draggable;
- 
-        droppedObject.fadeOut('slow');
-    }
-</script>
+	<script type="text/javascript">
+		function handleDrop(event, ui) {
+			var droppedObject = ui.draggable;
+
+			droppedObject.fadeOut('slow');
+		}
+	</script>
 	<!-- /Main -->
 </h:body>
 </html>

@@ -78,10 +78,10 @@
 					<p:fieldset legend="Scenario List" style="margin-top:10px">
 						<p:outputPanel id="scenarioList">
 							<p:dataTable value="#{scenarioListOperations.scenarioList}"
-								var="scenarioList" id="scenarioListTable" scrollable="true">
+								var="scenario" id="scenarioListTable" scrollable="true">
 
 								<p:column headerText="Scenario Name">
-									<h:outputText value="#{scenarioList.scenarioName}" />
+									<h:outputText value="#{scenario.scenarioName}" />
 								</p:column>
 
 								<p:column headerText="Action">
@@ -90,10 +90,10 @@
 											<tr>
 												<td><p:commandButton id="editScn" value="Edit"
 														ajax="false" process="@this" type="submit" 
-														action="#{editScenarioOperations.editScenario(scenarioList)}">
+														action="#{editScenarioOperations.editScenario(scenario)}">
 													</p:commandButton></td>
 												<td><p:commandButton value="Remove"
-														action="#{scenarioListOperations.onRemoveScenario(scenarioList)}"
+														action="#{scenarioListOperations.onRemoveScenario(scenario)}"
 														update=":scenarioForm:scenarioListTable">
 													</p:commandButton></td>
 											</tr>
