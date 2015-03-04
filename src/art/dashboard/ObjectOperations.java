@@ -198,7 +198,7 @@ public class ObjectOperations implements Serializable {
 					new DatabaseOperations().updateDB(deleteAttributequery);
 					String query = "delete from business_objects where objectName = '"
 							+ businessObject.getObjectName() + "'";
-					new DatabaseOperations().updateDB(query);
+					new DatabaseOperations().deleteObjectsDB(query);
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

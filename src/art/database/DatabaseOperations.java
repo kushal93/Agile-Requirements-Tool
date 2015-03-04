@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import com.google.visualization.*;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
@@ -89,8 +92,7 @@ public class DatabaseOperations {
 		return resultString;
 
 	}
-
-
+	
 	public int updateDB(String query) {
 		int flag=0;
 		try {
@@ -117,6 +119,37 @@ public class DatabaseOperations {
 		}
 		return flag;
 	}
+	
+	public int deleteObjectsDB(String query) {
+		int flag=0;
+		try {
+			System.out.println("Query: " + query);
+			// statements allow to issue SQL queries to the database
+			statement = connection.createStatement();
+			statement.execute(query);
+		} catch (Exception e) {
+			System.out.println("Error in DatabaseOperations -> updateDB() :"
+					+ e.getMessage());
+			flag=-1;
+			FacesMessage msg = new FacesMessage(
+					"Please make sure the Object is NOT a part of any scenario!");
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		} finally {
+			try {
+				// close all connections
+				statement.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				System.out
+						.println("Error in DatabaseOperations -> updateDB() :"
+								+ e.getMessage());
+				flag=-1;
+			}
+		}
+		return flag;
+	}
+	
 
 	public ArrayList<BusinessObject> readBusinessObjects() {
 		ArrayList<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
