@@ -73,7 +73,7 @@
 			<div class="col-sm-9">
 
 				<h:form id="objectForm">
-					<p:growl id="messages" showDetail="true" />
+					<p:growl id="msgs" showdetail ="true" />
 					<p:panelGrid columns="2">
 						<p:outputLabel for="objectName" value="Business Object Name"></p:outputLabel>
 						<p:inputText id="objectName" value="#{objectOperations.objectName}" />
@@ -95,10 +95,10 @@
 			                        Business Objects  
 			                    </f:facet>
 						<p:ajax event="rowEdit" listener="#{objectOperations.onEdit}"
-							update=":objectForm:messages" />
+							update=":objectForm:msgs" />
 						<p:ajax event="rowEditCancel"
 							listener="#{objectOperations.onDelete}"
-							update=":objectForm:messages" />
+							update=":objectForm:msgs" />
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Business Object Name" />

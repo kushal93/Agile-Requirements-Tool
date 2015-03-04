@@ -42,7 +42,7 @@ public class ObjectOperations implements Serializable {
 	private static List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
 	/*
 	 * this variable is used to bind front end input where user creates a new
-	 * attribute byentering name of business object
+	 * attribute by entering name of business object
 	 */
 	private Map<String, String> dropDownObjectTypes;
 	private String objectName;
@@ -188,33 +188,48 @@ public class ObjectOperations implements Serializable {
 	public void onDelete(RowEditEvent event) {
 		BusinessObject businessObject = (BusinessObject) event.getObject();
 		// System.out.println(businessObject.getObjectName());
-		businessObjects.remove((BusinessObject) event.getObject());
-		FacesMessage msg = new FacesMessage("Object Deleted");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
 
 				try {
+					int flag =0;
 					String deleteAttributequery = "delete from attributes where objectName = '"
 							+ businessObject.getObjectName() + "'";
-					new DatabaseOperations().updateDB(deleteAttributequery);
+					
+					flag = new DatabaseOperations().deleteObjectsDB(deleteAttributequery);
 					String query = "delete from business_objects where objectName = '"
 							+ businessObject.getObjectName() + "'";
-					new DatabaseOperations().deleteObjectsDB(query);
+					flag = new DatabaseOperations().deleteObjectsDB(query);
+					
+					if (flag == 0) {
+					businessObjects.remove((BusinessObject) event.getObject());
+					FacesMessage msg = new FacesMessage("Object Deleted");
+					FacesContext.getCurrentInstance().addMessage(null, msg);
+					} else {
+						
+						FacesMessage msg = new FacesMessage(
+								"Please make sure the Object is NOT a part of any scenario!");
+						FacesContext.getCurrentInstance().addMessage(null, msg);
+	
+					}
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
+					FacesMessage msg = new FacesMessage(
+							"Please make sure the Object is NOT a part of any scenario!");
+					FacesContext.getCurrentInstance().addMessage(null, msg);
+					
 					System.out.println("Error in Class"
 							+ this.getClass().getName() + " -> onDelete()--"
 							+ e.getMessage());
 				}
-
-		ExternalContext ec = FacesContext.getCurrentInstance()
+				
+		/*ExternalContext ec = FacesContext.getCurrentInstance()
 				.getExternalContext();
 		try {
 			ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/*

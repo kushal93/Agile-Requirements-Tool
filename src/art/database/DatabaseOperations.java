@@ -131,9 +131,7 @@ public class DatabaseOperations {
 			System.out.println("Error in DatabaseOperations -> updateDB() :"
 					+ e.getMessage());
 			flag=-1;
-			FacesMessage msg = new FacesMessage(
-					"Please make sure the Object is NOT a part of any scenario!");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			
 		} finally {
 			try {
 				// close all connections
