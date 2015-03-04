@@ -27,6 +27,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIData;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.event.RowEditEvent;
@@ -36,7 +37,7 @@ import art.datastructures.BOAttribute;
 import art.datastructures.BusinessObject;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class ObjectOperations implements Serializable {
 	private static List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
 	/*
@@ -191,20 +192,20 @@ public class ObjectOperations implements Serializable {
 		FacesMessage msg = new FacesMessage("Object Deleted");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 
-		new Thread(new Runnable() {
-			public void run() {
 				try {
+					String deleteAttributequery = "delete from attributes where objectName = '"
+							+ businessObject.getObjectName() + "'";
+					new DatabaseOperations().updateDB(deleteAttributequery);
 					String query = "delete from business_objects where objectName = '"
 							+ businessObject.getObjectName() + "'";
 					new DatabaseOperations().updateDB(query);
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					System.out.println("Error in Class"
 							+ this.getClass().getName() + " -> onDelete()--"
 							+ e.getMessage());
 				}
-			}
-		}).start();
 
 		ExternalContext ec = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -270,6 +271,8 @@ public class ObjectOperations implements Serializable {
 	 ****************************************************************************/
 	public void addAttribute() {
 		boolean exists = false;
+		
+		attribute.setConditionalDependencies(String.join("-", attribute.getConditionalMandatory()));
 
 		if (attribute.getAttributeName().equals("")
 				|| attribute.getAttributeType().equals("")) {
@@ -338,7 +341,7 @@ public class ObjectOperations implements Serializable {
 	/***************************************************************************
 	 * Method: onDeleteAttribute
 	 * 
-	 * Purpose: This method is invoked when user opts to delete an attribute
+	 * Purpose: This method is inv[0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9]oked when user opts to delete an attribute
 	 ****************************************************************************/
 	public void onDeleteAttribute() {
 		// Find out the attribute that is deleted - for this puropse only

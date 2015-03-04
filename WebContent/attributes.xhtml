@@ -113,10 +113,10 @@
 								<p:inputText value="#{objectOperations.attribute.businessRule}" rendered="#{objectOperations.attribute.attributeType == 'RegEx'}"/>
 							</h:panelGroup>
 							
-							<p:commandButton id="btn_reset" value="Reset" type="reset"/>
+							<p:commandButton id="btn_reset" value="Reset" type="reset" update = "attributeForm:conditionalMandatoryInput"/>
 							 
 							 <p:commandButton id="btn_add" value="Add Attribute"
-								update = "attributeForm:attributesTable attributeForm:msgs" action="#{objectOperations.addAttribute}">
+								update = "attributeForm:attributesTable attributeForm:msgs attributeForm:conditionalMandatory" action="#{objectOperations.addAttribute}">
 								<p:collector value="#{objectOperations.attribute}"
 									addTo="#{objectOperations.selectedBO.attributes}" unique="true"
 									 />

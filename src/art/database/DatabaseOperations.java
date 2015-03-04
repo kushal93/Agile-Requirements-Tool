@@ -183,19 +183,7 @@ public class DatabaseOperations {
 			System.out
 					.println("Error in Database Operations -> readattributes() :"
 							+ e.getMessage());
-		} finally {
-			try {
-				// close all connections
-				resultSet.close();
-				statement.close();
-				connection.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out
-						.println("Error in Database Operations -> readattributes():"
-								+ e.getMessage());
-			}
-		}
+		} 
 
 		return attributes;
 	}

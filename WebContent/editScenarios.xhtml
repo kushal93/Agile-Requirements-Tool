@@ -74,11 +74,21 @@
 			<div class="col-md-8">
 				<h:form id="scenarioForm">
 					<p:growl id="msgs" />
+					<table style="width:97%">
+					<tr>
+					<td>
 					<h:outputLabel for="ajax" value="Scenario Name : " />
 					<p:inplace id="ajax" editor="true">
 						<p:inputText value="#{editScenarioOperations.scenarioName}"
 							required="true" label="text" />
 					</p:inplace>
+					</td>
+					<td align="right">
+       				 <p:commandButton id="btn_generate" value="Generate Examples"
+								 />
+       				 </td>
+       				 </tr>
+       				 </table>
 					<p:fieldset legend="Available Business Objects"
 						style="margin-top:10px">
 						<p:dataTable id="availableObjects" var="object"

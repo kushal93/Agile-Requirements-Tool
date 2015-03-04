@@ -98,6 +98,10 @@ public class BOAttribute implements Serializable {
 		return conditionalDependencies;
 	}
 	
+	public void setConditionalDependencies(String conditionalDependencies) {
+		this.conditionalDependencies = conditionalDependencies;
+	}
+	
 //	public boolean CheckMandatoryType() {
 //		if(mandatoryType.equals("Conditional Mandatory"))
 //			return 
