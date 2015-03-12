@@ -36,10 +36,10 @@ public class DatabaseOperations {
 					.getConnection("jdbc:mysql://localhost/art_db?"
 							+ "user=root&password=1");
 
-			System.out
+			/*System.out
 					.println("Connection Successfull and the DATABASE NAME IS:"
 							+ connection.getMetaData().getDatabaseProductName());
-		} catch (Exception e) {
+*/		} catch (Exception e) {
 			System.out.println("Error in Database Operations :"
 					+ e.getMessage());
 		}
