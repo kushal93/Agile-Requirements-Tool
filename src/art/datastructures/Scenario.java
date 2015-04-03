@@ -1,8 +1,9 @@
 package art.datastructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Scenario {
+public class Scenario implements Serializable {
  
 	private String scenarioName;
 	private int scenarioID;

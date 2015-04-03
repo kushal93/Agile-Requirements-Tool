@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="res/slf4j-api-1.7.10.jar"/>
 	<classpathentry kind="lib" path="res/snakeyaml-1.14.jar"/>
 	<classpathentry kind="lib" path="/home/manishgant/MSITProject/ART_Project/WebContent/WEB-INF/lib/xeger-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

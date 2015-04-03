@@ -135,7 +135,7 @@ public class EditScenarioOperations implements Serializable {
 
 		preReqObjects.add(object);
 		selectedScenarioMain.setPreReqObjects(preReqObjects);
-		businessObjects.remove(object);
+		businessObjectsCopy.remove(object);
 
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -148,7 +148,7 @@ public class EditScenarioOperations implements Serializable {
 
 		inputObject.add(object);
 		selectedScenarioMain.setInputObjects(inputObject);
-		businessObjects.remove(object);
+		businessObjectsCopy.remove(object);
 
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -161,7 +161,7 @@ public class EditScenarioOperations implements Serializable {
 
 		outputObject.add(object);
 		selectedScenarioMain.setOutputObjects(outputObject);
-		businessObjects.remove(object);
+		businessObjectsCopy.remove(object);
 		FacesMessage msg = new FacesMessage(object.getObjectName() + " added");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
@@ -322,6 +322,7 @@ public class EditScenarioOperations implements Serializable {
 
 	public void leftOverOperations(String selectedScenarioName) {
 
+		System.out.println("Scenario Name :" + selectedScenarioName);
 		businessObjects = new DatabaseOperations().readBusinessObjects();
 		businessObjectsCopy.addAll(businessObjects);
 

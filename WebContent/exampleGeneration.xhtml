@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<head>
+<link rel="stylesheet" type="text/css"
+	href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="bootstrap/css/bootstrap-theme.min.css" />
+<link rel="stylesheet" type="text/css" href="bootstrap/css/Custom.css" />
+<link rel="stylesheet" type="text/css" href="bootstrap/css/styles.css" />
+<script type="text/javascript" src="js/jquery-2.1.3.js" />
+<script type="text/javascript" src="js/jquery.csvToTable.js" />
+
+
+
+			<title>jQuery CSVToTable </title>
+
+			<link rel="stylesheet" href="resources/css/csvtable.css"
+				type="text/css" />
+
+			<script type="text/javascript" src="resources/js/jquery-1.4.2.min.js"></script>
+			<script type="text/javascript"
+				src="resources/js/jquery.csvToTable.js"></script>
+			<script type="text/javascript"
+				src="resources/js/jquery.tablesorter.dev.js"></script>
+
+			<script>	
+			$(function() {
+					$('#CSVTable').CSVToTable('DataTable2.csv', {
+						loadingImage : 'resources/images/loading.gif',
+						startLine : 0
+					});
+
+				});
+			</script>
+</head>
+<body>
+
+	<div align="center">
+		<div id="CSVTable"></div>
+
+
+	</div>
+</body>
+</html>

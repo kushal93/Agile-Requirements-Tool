@@ -1,9 +1,10 @@
 package art.datastructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessObject{
+public class BusinessObject implements Serializable{
 	private String objectName;
 	private String objectType;
 	private int objectID;

@@ -1,8 +1,9 @@
 package art.datastructures;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Example {
+public class Example implements Serializable {
 	private String exampleString;
 	private int numAttributes;
 	private List<BOAttribute> exampleAttributeList;

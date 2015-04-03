@@ -10,6 +10,8 @@
 	<h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
 	<h:outputStylesheet name="bootstrap/css/Custom.css" />
 	<h:outputStylesheet name="bootstrap/css/styles.css" />
+    <h:outputScript name="js/jquery-2.1.3.js" library="js" target="head" />	
+    <h:outputScript name="js/jquery.csvToTable.js" library="js"/>
 </h:head>
 <h:body>
 	<!-- Header -->
@@ -77,12 +79,20 @@
 		<h:form id="exampleForm">
 			<p:growl id="messages" showDetail="true" />
 			<p:commandButton value="Add Business Object"
-								action="#{exampleGeneration.generateExampleBatch}" />
+								action="#{exampleGeneration.generateExampleBatch(15)}" />
+			<p:commandButton value="Show Examples"
+								onClick="function()" />
 		</h:form>
 		
 		
-		
 	</div>
+<div id="CSVTable"></div>
+
+<script type="text/javascript" src="_/js/jquery.csvToTable.js">
+$(function() {
+  $('#CSVTable').CSVToTable('DataTable.csv');
+});
+</script>
 
 </h:body>
 </html>

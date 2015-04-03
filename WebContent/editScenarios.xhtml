@@ -77,15 +77,16 @@
 					<table style="width:97%">
 					<tr>
 					<td>
-					<h:outputLabel for="ajax" value="Scenario Name : " />
-					<p:inplace id="ajax" editor="true">
-						<p:inputText value="#{editScenarioOperations.scenarioName}"
-							required="true" label="text" />
-					</p:inplace>
+					<h:outputLabel for="ajax" value="Scenario Name :  " /> &nbsp;
+					<p:outputLabel value="#{editScenarioOperations.scenarioName}"
+							 />
+					<!--<p:inplace id="ajax">
+						
+					</p:inplace>-->
 					</td>
 					<td align="right">
        				 <p:commandButton id="btn_generate" value="Generate Examples"
-								 />
+								 action="#{exampleGeneration.generateExampleBatch(15)}" />		 			 
        				 </td>
        				 </tr>
        				 </table>
